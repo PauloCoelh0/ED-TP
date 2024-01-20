@@ -1,4 +1,4 @@
-package api;
+package CaptureTheFlag;
 
 public class DemoCaptureTheFlag {
     public static void main(String[] args) {
