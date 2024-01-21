@@ -1,9 +1,9 @@
-package capturetheflag.estruturas;
+package capturetheflag.structures;
 
-import capturetheflag.estruturas.IteradoresArrayBinaryTree.InOrderIterator;
-import capturetheflag.estruturas.IteradoresArrayBinaryTree.LevelOrderIterator;
-import capturetheflag.estruturas.IteradoresArrayBinaryTree.PostOrderIterator;
-import capturetheflag.estruturas.IteradoresArrayBinaryTree.PreOrderIterator;
+import capturetheflag.structures.IteradoresArrayBinaryTree.InOrderIterator;
+import capturetheflag.structures.IteradoresArrayBinaryTree.LevelOrderIterator;
+import capturetheflag.structures.IteradoresArrayBinaryTree.PostOrderIterator;
+import capturetheflag.structures.IteradoresArrayBinaryTree.PreOrderIterator;
 import capturetheflag.exceptions.ElementNotFoundException;
 import capturetheflag.exceptions.EmptyCollectionException;
 import capturetheflag.interfaces.BinaryTreeADT;

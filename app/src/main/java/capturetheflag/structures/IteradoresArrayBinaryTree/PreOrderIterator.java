@@ -1,25 +1,25 @@
-package capturetheflag.estruturas.IteradoresArrayBinaryTree;
+package capturetheflag.structures.IteradoresArrayBinaryTree;
 
+import capturetheflag.structures.ArrayUnorderedList;
 import java.util.Iterator;
-import capturetheflag.estruturas.ArrayUnorderedList;
 
-public class InOrderIterator<T> implements Iterator<T> {
+public class PreOrderIterator<T> implements Iterator<T> {
     private ArrayUnorderedList<T> tempList;
     private Iterator<T> iter;
     private T[] tree;
 
-    public InOrderIterator(T[] tree) {
+    public PreOrderIterator(T[] tree) {
         this.tree = tree;
         tempList = new ArrayUnorderedList<T>();
-        inorder(0, tempList);
+        preorder(0, tempList);
         iter = tempList.iterator();
     }
 
-    private void inorder(int node, ArrayUnorderedList<T> tempList) {
+    private void preorder(int node, ArrayUnorderedList<T> tempList) {
         if (node < tree.length && tree[node] != null) {
-            inorder(node * 2 + 1, tempList);
             tempList.addToRear(tree[node]);
-            inorder((node + 1) * 2, tempList);
+            preorder(node * 2 + 1, tempList);
+            preorder((node + 1) * 2, tempList);
         }
     }
 

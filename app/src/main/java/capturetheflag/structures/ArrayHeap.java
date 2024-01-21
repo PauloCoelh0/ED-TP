@@ -1,4 +1,4 @@
-package capturetheflag.estruturas;
+package capturetheflag.structures;
 
 import capturetheflag.exceptions.EmptyCollectionException;
 import capturetheflag.interfaces.HeapADT;

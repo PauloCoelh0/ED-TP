@@ -1,7 +1,7 @@
-package capturetheflag.estruturas.IteradoresArrayBinaryTree;
+package capturetheflag.structures.IteradoresArrayBinaryTree;
 
-import capturetheflag.estruturas.ArrayUnorderedList;
-import capturetheflag.estruturas.LinkedQueue;
+import capturetheflag.structures.ArrayUnorderedList;
+import capturetheflag.structures.LinkedQueue;
 import capturetheflag.exceptions.EmptyCollectionException;
 
 import java.util.Iterator;

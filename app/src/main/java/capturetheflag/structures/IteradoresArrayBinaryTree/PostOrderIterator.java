@@ -1,6 +1,6 @@
-package capturetheflag.estruturas.IteradoresArrayBinaryTree;
+package capturetheflag.structures.IteradoresArrayBinaryTree;
 
-import capturetheflag.estruturas.ArrayUnorderedList;
+import capturetheflag.structures.ArrayUnorderedList;
 import java.util.Iterator;
 
 public class PostOrderIterator<T> implements Iterator<T> {
