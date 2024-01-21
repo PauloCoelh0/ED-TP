@@ -23,14 +23,15 @@ public class GameUtils {
                 System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " na posição " + oldLocation + " moveu-se para a posição " + nextStep);
             } else {
                 // Se a posição estiver ocupada, tenta encontrar um novo caminho
-                System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " encontrou uma posição ocupada na posição " + nextStep);
+                System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " encontrou a posição ocupada " + nextStep);
                 ArrayUnorderedList<Integer> locationsToAvoid = new ArrayUnorderedList<>();
                 locationsToAvoid.addToRear(nextStep);
 
-                Iterator<Integer> newPathIterator = bot.getAlgorithm().findShortestPath(bot.getLocation(), flagLocation, locationsToAvoid);
+                // Recalcular o movimento com base no algoritmo do bot
+                pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, locationsToAvoid);
 
-                if (newPathIterator != null && newPathIterator.hasNext()) {
-                    int newNextStep = newPathIterator.next();
+                if (pathIterator != null && pathIterator.hasNext()) {
+                    int newNextStep = pathIterator.next();
                     if (!isLocationOccupied(newNextStep, player, enemy, flagLocation)) {
                         bot.setLocation(newNextStep);
                         System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " recalculou e moveu-se para a posição " + newNextStep);
@@ -38,7 +39,7 @@ public class GameUtils {
                         System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " ainda encontrou uma posição ocupada após recalcular.");
                     }
                 } else {
-                    System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " não conseguiu encontrar um novo caminho válido.");
+                    System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " não conseguiu encontrar um novo movimento válido.");
                 }
             }
         } else {

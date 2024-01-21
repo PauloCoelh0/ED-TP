@@ -21,7 +21,7 @@ public class Algorithm {
     public Iterator<Integer> execute(int currentLocation, int flagLocation, ArrayUnorderedList<Integer> locationsToAvoid) throws EmptyCollectionException {
         switch (type) {
             case RANDOM_MOVE:
-                return moveRandomly(currentLocation).iterator();
+                return moveRandomly(currentLocation, locationsToAvoid).iterator();
             case SHORTEST_PATH:
             default:
                 return findShortestPath(currentLocation, flagLocation, locationsToAvoid);
@@ -32,13 +32,13 @@ public class Algorithm {
         return network.findShortestPath(startVertex, endVertex, locationsToAvoid, network);
     }
 
-    public ArrayUnorderedList<Integer> moveRandomly(int currentLocation) {
+    public ArrayUnorderedList<Integer> moveRandomly(int currentLocation, ArrayUnorderedList<Integer> locationsToAvoid) {
         ArrayUnorderedList<Integer> adjacentVertices = new ArrayUnorderedList<>();
         ArrayUnorderedList<Integer> nextStep = new ArrayUnorderedList<>();
 
-        // Encontrar todos os vértices adjacentes
+        // Encontrar todos os vértices adjacentes não presentes em locationsToAvoid
         for (int i = 0; i < network.size(); i++) {
-            if (network.edgeExists(currentLocation, i)) {
+            if (network.edgeExists(currentLocation, i) && (locationsToAvoid == null || !locationsToAvoid.contains(i))) {
                 adjacentVertices.addToFront(i);
             }
         }
@@ -47,7 +47,7 @@ public class Algorithm {
         if (!adjacentVertices.isEmpty()) {
             nextStep.addToRear(adjacentVertices.getIndex(random.nextInt(adjacentVertices.size())));
         } else {
-            nextStep.addToRear(currentLocation); // Nenhuma mudança se não houver vértices adjacentes
+            nextStep.addToRear(currentLocation); // Nenhuma mudança se não houver vértices adjacentes válidos
         }
 
         return nextStep;
