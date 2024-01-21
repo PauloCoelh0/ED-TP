@@ -11,7 +11,7 @@ import static capturetheflag.game.GameRules.isLocationOccupied;
 public class GameUtils {
     public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException {
         int oldLocation = bot.getLocation(); // Localização anterior para registro
-        Iterator<Integer> pathIterator = bot.getAlgorithm().findShortestPath(bot.getLocation(), flagLocation, null);
+        Iterator<Integer> pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, null);
 
         // Verifica se há um caminho disponível
         if (pathIterator != null && pathIterator.hasNext()) {
@@ -64,15 +64,19 @@ public class GameUtils {
     }
 
     public static Algorithm chooseAlgorithm(Scanner scanner, GameMap gameMap) {
-        System.out.print("Escolha um algoritmo para o bot: ");
-        int choice = scanner.nextInt();
+        System.out.println("Escolha um algoritmo para o bot:");
         System.out.println("1. Caminho mais curto (ShortestPath)");
+        System.out.println("2. Movimento aleatório");
+
+        int choice = scanner.nextInt();
         switch (choice) {
             case 1:
-                return new Algorithm(gameMap.getNetwork());
+                return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
+            case 2:
+                return new Algorithm(gameMap.getNetwork(), AlgorithmType.RANDOM_MOVE);
             default:
                 System.out.println("\n[ERRO]: Opção inválida. Escolhendo 'Caminho mais curto' por padrão.");
-                return new Algorithm(gameMap.getNetwork());
+                return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
         }
     }
 
