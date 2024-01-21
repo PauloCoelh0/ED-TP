@@ -11,14 +11,16 @@ import static capturetheflag.game.GameRules.isLocationOccupied;
 public class GameUtils {
     public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException {
         int oldLocation = bot.getLocation(); // Localização anterior para registro
-        Iterator<Integer> pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, null);
+        int teamFlagLocation = player.getFlag().getLocation();
+        Iterator<Integer> pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, teamFlagLocation,null);
 
         // Verifica se há um caminho disponível
         if (pathIterator != null && pathIterator.hasNext()) {
             int nextStep = pathIterator.next(); // O próximo passo no caminho
 
-            // Se a próxima posição não estiver ocupada, move o bot
-            if (!isLocationOccupied(nextStep, player, enemy, flagLocation)) {
+            if (nextStep == oldLocation) {
+                System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " permaneceu na posição " + oldLocation);
+            } else if (!isLocationOccupied(nextStep, player, enemy, flagLocation)) {
                 bot.setLocation(nextStep); // Move o bot para o próximo passo
                 System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " na posição " + oldLocation + " moveu-se para a posição " + nextStep);
             } else {
@@ -28,7 +30,7 @@ public class GameUtils {
                 locationsToAvoid.addToRear(nextStep);
 
                 // Recalcular o movimento com base no algoritmo do bot
-                pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, locationsToAvoid);
+                pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, teamFlagLocation,  locationsToAvoid);
 
                 if (pathIterator != null && pathIterator.hasNext()) {
                     int newNextStep = pathIterator.next();
@@ -68,6 +70,7 @@ public class GameUtils {
         System.out.println("Escolha um algoritmo para o bot:");
         System.out.println("1. Caminho mais curto (ShortestPath)");
         System.out.println("2. Movimento aleatório");
+        System.out.println("3. Guarda (Guard)");
 
         int choice = scanner.nextInt();
         switch (choice) {
@@ -75,6 +78,8 @@ public class GameUtils {
                 return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
             case 2:
                 return new Algorithm(gameMap.getNetwork(), AlgorithmType.RANDOM_MOVE);
+            case 3:
+                return new Algorithm(gameMap.getNetwork(), AlgorithmType.GUARD);
             default:
                 System.out.println("\n[ERRO]: Opção inválida. Escolhendo 'Caminho mais curto' por padrão.");
                 return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
