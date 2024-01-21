@@ -157,7 +157,7 @@ public class GameController {
             double density = scanner.nextDouble();
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
-            gameMap.printMap();
+            gameMap.printVisualMap();
 
             System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
             // Exportação opcional do mapa

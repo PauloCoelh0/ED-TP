@@ -2,6 +2,9 @@ package capturetheflag.game;
 
 import capturetheflag.exceptions.EmptyCollectionException;
 import capturetheflag.structures.Network;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 
 public class GameMap {
     private final Network<Integer> network;
@@ -89,6 +92,32 @@ public class GameMap {
             }
         }
     }
+    public void printVisualMap() {
+        Graph graph = new SingleGraph("Game Map Visualization");
+
+        // Configuração do estilo visual do grafo
+        graph.addAttribute("ui.stylesheet", "node { fill-color: red; size: 20px; text-size: 20; } edge { fill-color: grey; }");
+
+        // Adicionando vértices
+        for (int i = 0; i < numLocations; i++) {
+            graph.addNode(Integer.toString(i));
+            Node node = graph.getNode(Integer.toString(i));
+            node.addAttribute("ui.label", Integer.toString(i));
+        }
+
+        // Adicionando arestas
+        for (int i = 0; i < numLocations; i++) {
+            for (int j = 0; j < numLocations; j++) {
+                if (network.edgeExists(i, j)) {
+                    String edgeId = i + "_" + j;
+                    graph.addEdge(edgeId, Integer.toString(i), Integer.toString(j), true); // true para arestas direcionadas se necessário
+                }
+            }
+        }
+        // Mostrar o grafo
+        graph.display();
+    }
+
 
     public Network<Integer> getNetwork() {
         return network;
