@@ -35,10 +35,10 @@ public class GameMap {
 
         // Verificar conectividade
         if (!network.isConnected()) {
-            System.out.println("O mapa gerado não é conectado. Gerando novamente...");
+            System.out.println("[MENSAGEM]: O mapa gerado não é conectado. Gerando novamente...");
             regenerateMap();
         } else {
-            System.out.println("Mapa conectado com sucesso!");
+            System.out.println("[MESSAGEM]: Mapa conectado com sucesso!");
         }
     }
 
@@ -79,7 +79,7 @@ public class GameMap {
     }
 
     public void printNetwork(Network<Integer> network) {
-        System.out.println("Mapa Importado:");
+        System.out.println("[MESSAGEM]: Mapa Importado:");
         for (int i = 0; i < numLocations; i++) {
             for (int j = 0; j < numLocations; j++) {
                 if (network.edgeExists(i, j)) {

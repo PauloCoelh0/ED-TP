@@ -23,6 +23,17 @@ public class GameController {
         this.player2 = new Player("Player 2");
     }
 
+    private int readIntSafely() {
+        while (true) {
+            if (scanner.hasNextInt()) {
+                return scanner.nextInt();
+            } else {
+                System.out.println("\n[ERRO]: Entrada inválida. Por favor, insira um número inteiro: ");
+                scanner.next(); // Isso descarta a entrada inválida
+            }
+        }
+    }
+
     public void start() throws EmptyCollectionException {
         System.out.println("=================================");
         System.out.println("| Bem-vindo ao Capture the Flag! |");
@@ -35,7 +46,7 @@ public class GameController {
             System.out.println("3. Iniciar jogo");
             System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
-            int choice = scanner.nextInt();
+            int choice = readIntSafely();
 
             switch (choice) {
                 case 1:
@@ -49,15 +60,15 @@ public class GameController {
                         setupGame();
                         startGame();
                     } else {
-                        System.out.println("Por favor, gere ou importe um mapa antes de iniciar o jogo.");
+                        System.out.println("\n[ERRO]: Por favor, gere ou importe um mapa antes de iniciar o jogo.\n");
                     }
                     break;
                 case 4:
                     running = false;
-                    System.out.println("Saindo...");
+                    System.out.println("\n[MESSAGEM]: Saindo...\n");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("\n[ERRO]: Opção Inválida.\n");
             }
         }
     }
@@ -66,7 +77,7 @@ public class GameController {
         setFlagsMenu(player1);
         setFlagsMenu(player2);
 
-        System.out.println("Quantos bots cada jogador terá?");
+        System.out.print("Quantos bots cada jogador terá?: ");
         int numberOfBots = scanner.nextInt();
 
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
@@ -77,7 +88,7 @@ public class GameController {
     }
 
     private void startGame() throws EmptyCollectionException {
-        System.out.println("O jogo começou!");
+        System.out.println("\n[MESSAGEM]: jogo começou!\n");
 
         boolean gameEnded = false;
         int round = 1;
@@ -110,20 +121,21 @@ public class GameController {
                 break;
             }
 
+
             round++;
         }
     }
 
     public  void setFlagsMenu(Player player) {
-        System.out.println(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
+        System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
         int flagLocation = scanner.nextInt();
 
         // Verificação da validade da localização e se ela já foi escolhida
         while (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size() || (player1.getFlag() != null && player1.getFlag().getLocation() == flagLocation) || (player2.getFlag() != null && player2.getFlag().getLocation() == flagLocation)) {
             if (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size()) {
-                System.out.println("Localização inválida. Por favor, escolha um número entre 0 e " + (gameMap.getNetwork().size() - 1) + ".");
+                System.out.print("\n[ERRO]: Localização inválida. Por favor, escolha um número entre 0 e " + (gameMap.getNetwork().size() - 1) + ": ");
             } else {
-                System.out.println("Localização já escolhida pelo outro jogador. Escolha outra localização.");
+                System.out.print("\n[ERRO]: Localização já escolhida pelo outro jogador. Escolha outra localização: ");
             }
             flagLocation = scanner.nextInt();
         }
@@ -134,21 +146,22 @@ public class GameController {
 
     private static void generateMapMenu() {
         try {
-            System.out.println("Insira a quantidade de localizações [10-100]: ");
+            //TODO colocar limite se for para utilizar.
+            System.out.print("Insira a quantidade de localizações [10-100]: ");
             int numLocations = scanner.nextInt();
 
-            System.out.println("Caminhos bidirecionais ? [true/false]: ");
+            System.out.print("Caminhos bidirecionais ? [true/false]: ");
             boolean isBidirectional = scanner.nextBoolean();
 
-            System.out.println("Insira a densidade das arestas [0-1]: ");
+            System.out.print("Insira a densidade das arestas [0-1]: ");
             double density = scanner.nextDouble();
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
             gameMap.printMap();
 
-            System.out.println("O mapa foi criado com sucesso!");
+            System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
             // Exportação opcional do mapa
-            System.out.println("Deseja exportar o mapa para um arquivo? [true/false]: ");
+            System.out.print("Deseja exportar o mapa para um arquivo? [true/false]: ");
             boolean export = scanner.nextBoolean();
             if (export) {
                 System.out.println("Insira o nome do arquivo para salvar o mapa (ex: map.json): ");

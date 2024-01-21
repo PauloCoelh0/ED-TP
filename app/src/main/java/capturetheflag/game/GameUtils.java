@@ -64,14 +64,14 @@ public class GameUtils {
     }
 
     public static Algorithm chooseAlgorithm(Scanner scanner, GameMap gameMap) {
-        System.out.println("Escolha um algoritmo para o bot:");
-        System.out.println("1. Caminho mais curto (ShortestPath)");
+        System.out.print("Escolha um algoritmo para o bot: ");
         int choice = scanner.nextInt();
+        System.out.println("1. Caminho mais curto (ShortestPath)");
         switch (choice) {
             case 1:
                 return new Algorithm(gameMap.getNetwork());
             default:
-                System.out.println("Opção inválida. Escolhendo 'Caminho mais curto' por padrão.");
+                System.out.println("\n[ERRO]: Opção inválida. Escolhendo 'Caminho mais curto' por padrão.");
                 return new Algorithm(gameMap.getNetwork());
         }
     }
