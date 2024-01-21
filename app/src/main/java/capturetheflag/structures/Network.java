@@ -1,6 +1,5 @@
 package capturetheflag.structures;
 
-import capturetheflag.exceptions.EmptyCollectionException;
 import capturetheflag.interfaces.NetworkADT;
 
 import java.util.Iterator;
@@ -54,8 +53,6 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         }
     }
 
-    // TODO ver com o paulo se é necessário adicionar os métodos novos que adicionei à estrutura network à NetworkADT
-
     public boolean containsVertex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
             if (vertex.equals(vertices[i])) {
@@ -104,6 +101,64 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         }
     }
 
+    // Método novo para encontrar o caminho mais curto considerando localizações a evitar
+    public Iterator<Integer> findShortestPath(int startVertex, int endVertex, ArrayUnorderedList<Integer> locationsToAvoid, Network network) {
+        int numVertices = network.size();
+        double[] distances = new double[numVertices];
+        boolean[] visited = new boolean[numVertices];
+        int[] previous = new int[numVertices];
+
+        for (int i = 0; i < numVertices; i++) {
+            distances[i] = Double.MAX_VALUE;
+            visited[i] = false;
+            previous[i] = -1;
+        }
+
+        distances[startVertex] = 0;
+
+        for (int i = 0; i < numVertices; i++) {
+            int closestVertex = -1;
+            double shortestDistance = Double.MAX_VALUE;
+
+            for (int j = 0; j < numVertices; j++) {
+                if (!visited[j] && distances[j] < shortestDistance) {
+                    closestVertex = j;
+                    shortestDistance = distances[j];
+                }
+            }
+
+            if (closestVertex == -1) {
+                break; // Todos os vértices acessíveis foram visitados
+            }
+
+            visited[closestVertex] = true;
+
+            for (int j = 0; j < numVertices; j++) {
+                if (!visited[j] && network.edgeExists(closestVertex, j) && (locationsToAvoid == null || !locationsToAvoid.contains(j))) {
+                    double edgeDistance = network.getWeight(closestVertex, j);
+                    if (distances[closestVertex] + edgeDistance < distances[j]) {
+                        distances[j] = distances[closestVertex] + edgeDistance;
+                        previous[j] = closestVertex;
+                    }
+                }
+            }
+        }
+
+        ArrayUnorderedList<Integer> path = new ArrayUnorderedList<>();
+        if (previous[endVertex] != -1) { // Verifica se existe um caminho
+            for (int vertex = endVertex; vertex != startVertex; vertex = previous[vertex]) {
+                if (vertex == -1) {
+                    // Caminho não encontrado, limpe o caminho e pare o loop
+                    path = new ArrayUnorderedList<>();
+                    break;
+                }
+                path.addToFront(vertex);
+            }
+        }
+
+        return path.iterator();
+    }
+
     @Override
     public double shortestPathWeight(T startVertex, T targetVertex) {
         int startIndex = getIndex(startVertex);
@@ -132,16 +187,16 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
 
             // Atualiza a distância dos vértices adjacentes do vértice selecionado
             for (int v = 0; v < numVertices; v++) {
-                // Atualiza distances[v] somente se não estiver em visited, há uma aresta de
-                // u para v, e o peso total do caminho de startVertex até v através de u é
-                // menor que o valor atual de distances[v]
+                /* Atualiza distances[v] somente se não estiver em visited, há uma aresta de
+                 * u para v, e o peso total do caminho de startVertex até v através de u é
+                 * menor que o valor atual de distances[v]
+                 */
                 if (!visited[v] && adjMatrix[u][v] && distances[u] != Double.POSITIVE_INFINITY
                         && distances[u] + weightMatrix[u][v] < distances[v]) {
                     distances[v] = distances[u] + weightMatrix[u][v];
                 }
             }
         }
-
         return distances[targetIndex];
     }
 
@@ -156,7 +211,6 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
                 minIndex = v;
             }
         }
-
         return minIndex;
     }
 }
