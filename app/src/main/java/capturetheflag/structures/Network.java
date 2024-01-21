@@ -1,6 +1,9 @@
 package capturetheflag.structures;
 
+import capturetheflag.exceptions.EmptyCollectionException;
 import capturetheflag.interfaces.NetworkADT;
+
+import java.util.Iterator;
 
 public class Network<T> extends Graph<T> implements NetworkADT<T> {
 
@@ -10,6 +13,15 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         super();
         weightMatrix = new double[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
         // Inicializar a matriz de pesos com um valor padrão, como Double.POSITIVE_INFINITY
+        initializeWeightMatrix();
+    }
+
+    private boolean isBidirectional;
+
+    public Network(boolean isBidirectional) {
+        super();
+        this.isBidirectional = isBidirectional;
+        weightMatrix = new double[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
         initializeWeightMatrix();
     }
 
@@ -41,6 +53,8 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
             }
         }
     }
+
+    // TODO ver com o paulo se é necessário adicionar os métodos novos que adicionei à estrutura network à NetworkADT
 
     public boolean containsVertex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
@@ -78,10 +92,15 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         int index2 = getIndex(vertex2);
 
         if (indexIsValid(index1) && indexIsValid(index2)) {
-            adjMatrix[index1][index2] = true;
-            adjMatrix[index2][index1] = true; // Para grafos não direcionados
-            weightMatrix[index1][index2] = weight;
-            weightMatrix[index2][index1] = weight;
+            adjMatrix[index1][index2] = true; // Aresta de vertex1 para vertex2
+            weightMatrix[index1][index2] = weight; // Peso da aresta de vertex1 para vertex2
+
+
+            if (isBidirectional) {
+                // Para grafos não direcionados, adiciona a aresta inversa
+                adjMatrix[index2][index1] = true;
+                weightMatrix[index2][index1] = weight;
+            }
         }
     }
 
