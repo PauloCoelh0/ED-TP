@@ -121,7 +121,7 @@ public class GameController {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (round[0] <= 10) { // Limitar o número de rodadas, por exemplo, a 10
+                if (round[0] <= 100) { // Limitar o número de rodadas, por exemplo, a 10
                     System.out.println("Ronda " + round[0] + ":");
 
                     // Executar turno do primeiro jogador
@@ -165,50 +165,6 @@ public class GameController {
 
         timer.scheduleAtFixedRate(task, 0, delay * 2); // Agendar a tarefa para executar a cada 2 segundos
     }
-
-
-
-
-//    private void startGame() throws EmptyCollectionException {
-//        System.out.println("\n[MESSAGEM]: jogo começou!\n");
-//
-//
-//
-//        boolean gameEnded = false;
-//
-//        int round = 1;
-//
-//        // Use a Random object to randomly choose the first player
-//        Random random = new Random();
-//        int firstPlayerIndex = random.nextInt(2); // 0 or 1 (Player 1 or Player 2)
-//        Player firstPlayer = (firstPlayerIndex == 0) ? player1 : player2;
-//        Player secondPlayer = (firstPlayer == player1) ? player2 : player1;
-//
-//        while (!gameEnded) {
-//            System.out.println("Ronda " + round + ":");
-//            // Determina qual bot joga com base na ronda atual
-//            int botIndexPlayer1 = (round - 1) % firstPlayer.getBots().size(); // Ciclo pelos bots do player 1
-//            int botIndexPlayer2 = (round - 1) % secondPlayer.getBots().size(); // Ciclo pelos bots do player 2
-//
-//            // Execute the turn for the first player
-//            gameEnded = executeBotTurn(firstPlayer, firstPlayer.getBots().get(botIndexPlayer1), secondPlayer.getFlag().getLocation(), gameMap, secondPlayer);
-//            if (gameEnded) {
-//                System.out.println(firstPlayer.getName() + " venceu o jogo!");
-//                resetGameState();
-//                break;
-//            }
-//
-//            // Execute the turn for the second player
-//            gameEnded = executeBotTurn(secondPlayer, secondPlayer.getBots().get(botIndexPlayer2), firstPlayer.getFlag().getLocation(), gameMap, firstPlayer);
-//            if (gameEnded) {
-//                System.out.println(secondPlayer.getName() + " venceu o jogo!");
-//                resetGameState();
-//                break;
-//            }
-//
-//            round++;
-//        }
-//    }
 
     public  void setFlagsMenu(Player player) {
         int flagLocation;

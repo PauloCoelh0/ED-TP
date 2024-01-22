@@ -110,12 +110,18 @@ public class GameMap {
         this.flagLocationPlayer2 = location;
     }
     public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) {
+        // Identificar o bot
+        String botLabel;
         if(Objects.equals(playerIdentifier, "Player 1")){
-            playerIdentifier = "P1";
-        } else if (Objects.equals(playerIdentifier, "Player 2")) {
-            playerIdentifier = "P2";
+            botLabel = "P1 B" + botNumber;
+        } else {
+            botLabel = "P2 B" + botNumber;
         }
-        String botLabel = playerIdentifier + " B" + botNumber;
+
+        // Remover localização anterior do bot
+        botLocations.values().remove(botLabel);
+
+        // Atualizar com a nova localização
         botLocations.put(newLocation, botLabel);
     }
 
@@ -150,7 +156,6 @@ public class GameMap {
 
     }
     public void updateVisualMap() {
-
         // Resetar a cor de todos os nós para o padrão
         for (Node node : graph) {
             node.addAttribute("ui.style", "fill-color: red;");
@@ -168,16 +173,31 @@ public class GameMap {
         if (flagLocationPlayer2 != null) {
             Node node = graph.getNode(Integer.toString(flagLocationPlayer2));
             if (node != null) {
-                node.addAttribute("ui.style", "fill-color: green;");
+                node.addAttribute("ui.style", "fill-color: rgb(30, 140, 0);");
             }
         }
 
-        for (Node node : graph) {
-            String label = node.getId(); // O rótulo padrão é o número da posição
-            if (botLocations.containsKey(Integer.parseInt(node.getId()))) {
-                label += " " + botLocations.get(Integer.parseInt(node.getId())); // Adiciona informações do bot
+        for (Map.Entry<Integer, String> botLocationEntry : botLocations.entrySet()) {
+            Node node = graph.getNode(Integer.toString(botLocationEntry.getKey()));
+            if (node != null) {
+                String botLabel = botLocationEntry.getValue();
+                // Incluir o número do vértice no rótulo
+                String label = node.getId() + " " + botLabel;
+
+                // Definir a cor baseada no jogador
+                String color = botLabel.startsWith("P1") ? "blue" : "rgb(30, 140, 0)";
+                node.addAttribute("ui.style", "fill-color: " + color + ";");
+                node.addAttribute("ui.style", "text-color: " + color + ";");
+                node.addAttribute("ui.label", label);
             }
-            node.addAttribute("ui.label", label);
+        }
+
+        // Remover rótulos de bots de nós que não têm mais bots
+        for (Node node : graph) {
+            if (!botLocations.containsKey(Integer.parseInt(node.getId()))) {
+                node.addAttribute("ui.label", node.getId());
+                node.addAttribute("ui.style", "text-color: black;");
+            }
         }
     }
 
