@@ -17,6 +17,10 @@ public class Algorithm {
         this.type = type;
     }
 
+    public AlgorithmType getType() {
+        return type;
+    }
+
     public Iterator<Integer> execute(int currentLocation, int enemyFlagLocation, int ourFlagLocation, ArrayUnorderedList<Integer> locationsToAvoid){
         switch (type) {
             case RANDOM_MOVE:

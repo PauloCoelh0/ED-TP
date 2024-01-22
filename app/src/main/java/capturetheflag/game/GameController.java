@@ -87,6 +87,7 @@ public class GameController {
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
         initializeBots(player2, numberOfBots, player2.getName(), scanner, gameMap);
 
+        System.out.println("aqui crl");
         player1.printBotsInfo();
         player2.printBotsInfo();
     }
@@ -194,7 +195,6 @@ public class GameController {
             System.out.println("Grafo importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);
-            gameMap.printNetwork(importedNetwork);
         } catch (IOException e) {
             System.err.println("Erro ao importar o grafo: " + e.getMessage());
         }

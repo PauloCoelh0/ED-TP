@@ -28,11 +28,23 @@ public class Bot {
     public void setLocation(int location) {
         this.location = location;
     }
-    @Override
-    public String toString() {
-        return "Bot{" +
-                "location=" + location +
-                ", player=" + player.getName() +
-                '}';
+
+    //TODO Mudar o nome dos bots
+    public String getInfo() {
+        String algorithmName;
+        switch (algorithm.getType()) {
+            case SHORTEST_PATH:
+                algorithmName = "Sonic";
+                break;
+            case RANDOM_MOVE:
+                algorithmName = "Toninho";
+                break;
+            case GUARD:
+                algorithmName = "GNR";
+                break;
+            default:
+                algorithmName = "Desconhecido";
+        }
+        return "O Bot " + botNumber + " está na posição " + location + " e é o " + algorithmName;
     }
 }
