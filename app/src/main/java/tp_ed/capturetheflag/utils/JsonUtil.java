@@ -17,7 +17,7 @@ public class JsonUtil {
         ArrayUnorderedList<JSONObject> edgesArray = new ArrayUnorderedList<>();
 
         for (int i = 0; i < network.size(); i++) {
-            for (int j = i + 1; j < network.size(); j++) {
+            for (int j = 0; j < network.size(); j++) {
                 if (network.edgeExists(i, j)) {
                     double weight = network.getWeight(i, j);
                     JSONObject edgeObject = new JSONObject();
@@ -29,16 +29,16 @@ public class JsonUtil {
             }
         }
 
-        // Escrever o JSON no arquivo
         try (FileWriter file = new FileWriter(filename)) {
             file.write(edgesArray.toString());
             file.flush();
         } catch (IOException e) {
             System.err.println("Erro ao exportar o grafo: " + e.getMessage());
         }
+
     }
 
-    public static Network<Integer> importNetworkFromJson(String filename, boolean isBidirectional) throws IOException {
+    public static Network<Integer> importNetworkFromJson(String filename) throws IOException {
         Network<Integer> network = new Network<>();
 
         try (FileReader fileReader = new FileReader(filename)) {
@@ -50,7 +50,6 @@ public class JsonUtil {
                 int vertex1 = edgeObject.getInt("vertex1");
                 int vertex2 = edgeObject.getInt("vertex2");
 
-                // Adicione os vértices se eles ainda não existirem no grafo
                 if (!network.containsVertex(vertex1)) {
                     network.addVertex(vertex1);
                 }
@@ -60,10 +59,6 @@ public class JsonUtil {
 
                 double weight = edgeObject.getDouble("weight");
                 network.addEdge(vertex1, vertex2, weight);
-
-                if (isBidirectional) {
-                    network.addEdge(vertex2, vertex1, weight);
-                }
             }
         } catch (IOException e) {
             System.err.println("Erro ao importar o grafo: " + e.getMessage());
@@ -72,4 +67,3 @@ public class JsonUtil {
         return network;
     }
 }
-

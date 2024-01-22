@@ -166,7 +166,7 @@ public class GameController {
 
                     round[0]++;
                 } else {
-                    System.out.println("O jogo terminou após 10 rodadas sem um vencedor.");
+                    System.out.println("O jogo terminou após 100 rodadas sem um vencedor.");
                     timer.cancel();
                     resetGameState();
                     isGameRunning = false; // O jogo terminou
@@ -239,10 +239,8 @@ public class GameController {
         System.out.println("Digite o nome do arquivo para importar o mapa: ");
         String filename = scanner.next();
 
-        boolean isBidirectional = false;
-
         try {
-            Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename, isBidirectional);
+            Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename);
             System.out.println("Grafo importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);

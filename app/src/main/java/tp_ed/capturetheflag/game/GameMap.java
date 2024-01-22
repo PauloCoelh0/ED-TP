@@ -17,7 +17,7 @@ public class GameMap {
     private Integer flagLocationPlayer1;
     private Integer flagLocationPlayer2;
     private Map<Integer, String> botLocations;
-    private Graph graph; // Adicione esta linha
+    private Graph graph;
     public GameMap(int numLocations, boolean isBidirectional, double density) throws EmptyCollectionException {
         this.numLocations = numLocations;
         this.density = density;
