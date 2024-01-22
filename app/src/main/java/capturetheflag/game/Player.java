@@ -50,9 +50,9 @@ public class Player {
         int initialSize = this.bots.size();
         for (int i = 0; i < initialSize; i++) {
             try {
-                Bot bot = this.bots.dequeue(); // Remove o bot da frente da fila
-                System.out.println("Bot na localização " + bot.getLocation());
-                this.bots.enqueue(bot); // Adiciona o bot de volta ao final da fila
+                Bot bot = this.bots.dequeue();
+                System.out.println(bot.getInfo());
+                this.bots.enqueue(bot);
             } catch (EmptyCollectionException e) {
                 System.err.println("Erro: " + e.getMessage());
             }

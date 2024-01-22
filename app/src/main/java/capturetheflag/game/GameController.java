@@ -99,6 +99,7 @@ public class GameController {
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
         initializeBots(player2, numberOfBots, player2.getName(), scanner, gameMap);
 
+        System.out.println("aqui crl");
         player1.printBotsInfo();
         player2.printBotsInfo();
     }
@@ -210,18 +211,22 @@ public class GameController {
 //    }
 
     public  void setFlagsMenu(Player player) {
-        System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
-        int flagLocation = scanner.nextInt();
+        int flagLocation;
 
-        // Verificação da validade da localização e se ela já foi escolhida
-        while (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size() || (player1.getFlag() != null && player1.getFlag().getLocation() == flagLocation) || (player2.getFlag() != null && player2.getFlag().getLocation() == flagLocation)) {
-            if (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size()) {
-                System.out.print("\n[ERRO]: Localização inválida. Por favor, escolha um número entre 0 e " + (gameMap.getNetwork().size() - 1) + ": ");
-            } else {
-                System.out.print("\n[ERRO]: Localização já escolhida pelo outro jogador. Escolha outra localização: ");
-            }
+        do {
+            System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
             flagLocation = scanner.nextInt();
-        }
+
+            if (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size()) {
+                System.out.println("\n[ERRO]: Localização inválida.");
+            } else if (!GameRules.hasMinimumAdjacentVertices(gameMap.getNetwork(), flagLocation, 2)) {
+                System.out.println("\n[ERRO]: Escolha uma localização que tenha pelo menos dois vértices adjacentes.");
+            } else if ((player1.getFlag() != null && player1.getFlag().getLocation() == flagLocation) || (player2.getFlag() != null && player2.getFlag().getLocation() == flagLocation)) {
+                System.out.println("\n[ERRO]: Localização já escolhida pelo outro jogador. Escolha outra localização.");
+            } else {
+                break;
+            }
+        } while (true);
 
         player.setFlag(new Flag(flagLocation));
         System.out.println(player.getName() + " definiu a bandeira na localização: " + flagLocation);
@@ -274,7 +279,6 @@ public class GameController {
             System.out.println("Grafo importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);
-            gameMap.printNetwork(importedNetwork);
         } catch (IOException e) {
             System.err.println("Erro ao importar o grafo: " + e.getMessage());
         }
