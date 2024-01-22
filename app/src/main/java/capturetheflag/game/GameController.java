@@ -142,6 +142,12 @@ public class GameController {
 
         player.setFlag(new Flag(flagLocation));
         System.out.println(player.getName() + " definiu a bandeira na localização: " + flagLocation);
+        if (player == player1) {
+            gameMap.setFlagLocationPlayer1(flagLocation);
+        } else if (player == player2) {
+            gameMap.setFlagLocationPlayer2(flagLocation);
+        }
+        gameMap.updateVisualMap();
     }
 
     private static void generateMapMenu() {
@@ -157,7 +163,7 @@ public class GameController {
             double density = scanner.nextDouble();
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
-            gameMap.printVisualMap();
+//            gameMap.printVisualMap();
 
             System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
             // Exportação opcional do mapa
@@ -184,7 +190,6 @@ public class GameController {
             Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename, isBidirectional);
             System.out.println("Grafo importado com sucesso!");
 
-            // Aqui você precisa atualizar o gameMap com o grafo importado
             gameMap = new GameMap(importedNetwork);
             gameMap.printNetwork(importedNetwork);
         } catch (IOException e) {

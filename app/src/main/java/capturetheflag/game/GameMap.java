@@ -10,18 +10,22 @@ public class GameMap {
     private final Network<Integer> network;
     private final int numLocations;
     private double density;
-
+    private Integer flagLocationPlayer1;
+    private Integer flagLocationPlayer2;
+    private Graph graph; // Adicione esta linha
     public GameMap(int numLocations, boolean isBidirectional, double density) throws EmptyCollectionException {
         this.numLocations = numLocations;
         this.density = density;
         this.network = new Network<>(isBidirectional);
 
         generateMap();
+        printVisualMap();
     }
 
     public GameMap(Network<Integer> importedNetwork) {
         this.network = importedNetwork;
         this.numLocations = importedNetwork.size();
+        printVisualMap();
     }
 
     private void generateMap() throws EmptyCollectionException {
@@ -92,8 +96,20 @@ public class GameMap {
             }
         }
     }
+
+    public void setFlagLocationPlayer1(Integer location) {
+        this.flagLocationPlayer1 = location;
+    }
+
+    public void setFlagLocationPlayer2(Integer location) {
+        this.flagLocationPlayer2 = location;
+    }
+
     public void printVisualMap() {
-        Graph graph = new SingleGraph("Game Map Visualization");
+        if (graph == null) {
+            graph = new SingleGraph("Game Map Visualization");
+            // Configuração e adição de vértices e arestas
+        }
 
         // Configuração do estilo visual do grafo
         graph.addAttribute("ui.stylesheet", "node { fill-color: red; size: 20px; text-size: 20; } edge { fill-color: grey; }");
@@ -114,10 +130,33 @@ public class GameMap {
                 }
             }
         }
-        // Mostrar o grafo
-        graph.display();
-    }
 
+        graph.display();
+
+    }
+    public void updateVisualMap() {
+
+        // Resetar a cor de todos os nós para o padrão
+        for (Node node : graph) {
+            node.addAttribute("ui.style", "fill-color: red;");
+        }
+
+        // Atualizar a cor do nó da bandeira do jogador 1
+        if (flagLocationPlayer1 != null) {
+            Node node = graph.getNode(Integer.toString(flagLocationPlayer1));
+            if (node != null) {
+                node.addAttribute("ui.style", "fill-color: blue;");
+            }
+        }
+
+        // Atualizar a cor do nó da bandeira do jogador 2
+        if (flagLocationPlayer2 != null) {
+            Node node = graph.getNode(Integer.toString(flagLocationPlayer2));
+            if (node != null) {
+                node.addAttribute("ui.style", "fill-color: green;");
+            }
+        }
+    }
 
     public Network<Integer> getNetwork() {
         return network;
