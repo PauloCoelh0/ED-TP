@@ -6,18 +6,23 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 public class GameMap {
     private final Network<Integer> network;
     private final int numLocations;
     private double density;
     private Integer flagLocationPlayer1;
     private Integer flagLocationPlayer2;
+    private Map<Integer, String> botLocations;
     private Graph graph; // Adicione esta linha
     public GameMap(int numLocations, boolean isBidirectional, double density) throws EmptyCollectionException {
         this.numLocations = numLocations;
         this.density = density;
         this.network = new Network<>(isBidirectional);
-
+        this.botLocations = new HashMap<>();
         generateMap();
         printVisualMap();
     }
@@ -104,6 +109,16 @@ public class GameMap {
     public void setFlagLocationPlayer2(Integer location) {
         this.flagLocationPlayer2 = location;
     }
+    public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) {
+        if(Objects.equals(playerIdentifier, "Player 1")){
+            playerIdentifier = "P1";
+        } else if (Objects.equals(playerIdentifier, "Player 2")) {
+            playerIdentifier = "P2";
+        }
+        String botLabel = playerIdentifier + " B" + botNumber;
+        botLocations.put(newLocation, botLabel);
+    }
+
 
     public void printVisualMap() {
         if (graph == null) {
@@ -155,6 +170,14 @@ public class GameMap {
             if (node != null) {
                 node.addAttribute("ui.style", "fill-color: green;");
             }
+        }
+
+        for (Node node : graph) {
+            String label = node.getId(); // O rótulo padrão é o número da posição
+            if (botLocations.containsKey(Integer.parseInt(node.getId()))) {
+                label += " " + botLocations.get(Integer.parseInt(node.getId())); // Adiciona informações do bot
+            }
+            node.addAttribute("ui.label", label);
         }
     }
 

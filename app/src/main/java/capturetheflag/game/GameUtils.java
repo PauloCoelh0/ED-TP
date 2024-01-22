@@ -22,6 +22,8 @@ public class GameUtils {
                 System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " permaneceu na posição " + oldLocation);
             } else if (!isLocationOccupied(nextStep, player, enemy, flagLocation)) {
                 bot.setLocation(nextStep); // Move o bot para o próximo passo
+                gameMap.updateBotLocation(player.getName(), bot.getBotNumber(), bot.getLocation());
+                gameMap.updateVisualMap();
                 System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " na posição " + oldLocation + " moveu-se para a posição " + nextStep);
             } else {
                 // Se a posição estiver ocupada, tenta encontrar um novo caminho
@@ -36,6 +38,8 @@ public class GameUtils {
                     int newNextStep = pathIterator.next();
                     if (!isLocationOccupied(newNextStep, player, enemy, flagLocation)) {
                         bot.setLocation(newNextStep);
+                        gameMap.updateBotLocation(player.getName(), bot.getBotNumber(), bot.getLocation());
+                        gameMap.updateVisualMap();
                         System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " recalculou e moveu-se para a posição " + newNextStep);
                     } else {
                         System.out.println(player.getName() + " Bot " + bot.getBotNumber() + " ainda encontrou uma posição ocupada após recalcular.");

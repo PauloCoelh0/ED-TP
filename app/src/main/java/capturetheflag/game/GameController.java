@@ -11,11 +11,15 @@ import java.util.Scanner;
 import static capturetheflag.game.GameUtils.executeBotTurn;
 import static capturetheflag.game.GameUtils.initializeBots;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GameController {
     private static GameMap gameMap;
     private Player player1;
     private Player player2;
     private static Scanner scanner;
+    private static boolean isGameRunning = false;
 
     public GameController() {
         this.scanner = new Scanner(System.in);
@@ -29,7 +33,7 @@ public class GameController {
                 return scanner.nextInt();
             } else {
                 System.out.println("\n[ERRO]: Entrada inválida. Por favor, insira um número inteiro: ");
-                scanner.next(); // Isso descarta a entrada inválida
+                scanner.next();
             }
         }
     }
@@ -41,34 +45,42 @@ public class GameController {
         boolean running = true;
 
         while (running) {
-            System.out.println("1. Gerar novo mapa");
-            System.out.println("2. Importar mapa existente");
-            System.out.println("3. Iniciar jogo");
-            System.out.println("4. Sair");
-            System.out.print("Escolha uma opção: ");
-            int choice = readIntSafely();
+            if (!isGameRunning) {
+                System.out.println("1. Gerar novo mapa");
+                System.out.println("2. Importar mapa existente");
+                System.out.println("3. Iniciar jogo");
+                System.out.println("4. Sair");
+                System.out.print("Escolha uma opção: ");
+                int choice = readIntSafely();
 
-            switch (choice) {
-                case 1:
-                    generateMapMenu();
-                    break;
-                case 2:
-                    importMapMenu();
-                    break;
-                case 3:
-                    if (gameMap != null) {
-                        setupGame();
-                        startGame();
-                    } else {
-                        System.out.println("\n[ERRO]: Por favor, gere ou importe um mapa antes de iniciar o jogo.\n");
-                    }
-                    break;
-                case 4:
-                    running = false;
-                    System.out.println("\n[MESSAGEM]: Saindo...\n");
-                    break;
-                default:
-                    System.out.println("\n[ERRO]: Opção Inválida.\n");
+                switch (choice) {
+                    case 1:
+                        generateMapMenu();
+                        break;
+                    case 2:
+                        importMapMenu();
+                        break;
+                    case 3:
+                        if (gameMap != null) {
+                            setupGame();
+                            startGame();
+                        } else {
+                            System.out.println("\n[ERRO]: Por favor, gere ou importe um mapa antes de iniciar o jogo.\n");
+                        }
+                        break;
+                    case 4:
+                        running = false;
+                        System.out.println("\n[MESSAGEM]: Saindo...\n");
+                        break;
+                    default:
+                        System.out.println("\n[ERRO]: Opção Inválida.\n");
+                }
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.out.println("Erro: " + e.getMessage());
             }
         }
     }
@@ -92,42 +104,110 @@ public class GameController {
     }
 
     private void startGame() throws EmptyCollectionException {
-        System.out.println("\n[MESSAGEM]: jogo começou!\n");
+        System.out.println("\n[MESSAGEM]: O jogo começou!\n");
+        isGameRunning = true;
 
-        boolean gameEnded = false;
-        int round = 1;
+        Timer timer = new Timer();
+        int delay = 1000; // 1000 ms = 1 segundo entre turnos
 
-        // Use a Random object to randomly choose the first player
+        // Use um objeto Random para escolher aleatoriamente o primeiro jogador
         Random random = new Random();
-        int firstPlayerIndex = random.nextInt(2); // 0 or 1 (Player 1 or Player 2)
+        int firstPlayerIndex = random.nextInt(2); // 0 ou 1 (Player 1 ou Player 2)
         Player firstPlayer = (firstPlayerIndex == 0) ? player1 : player2;
         Player secondPlayer = (firstPlayer == player1) ? player2 : player1;
+        final int[] round = {1};
 
-        while (!gameEnded) {
-            System.out.println("Ronda " + round + ":");
-            // Determina qual bot joga com base na ronda atual
-            int botIndexPlayer1 = (round - 1) % firstPlayer.getBots().size(); // Ciclo pelos bots do player 1
-            int botIndexPlayer2 = (round - 1) % secondPlayer.getBots().size(); // Ciclo pelos bots do player 2
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (round[0] <= 10) { // Limitar o número de rodadas, por exemplo, a 10
+                    System.out.println("Ronda " + round[0] + ":");
 
-            // Execute the turn for the first player
-            gameEnded = executeBotTurn(firstPlayer, firstPlayer.getBots().get(botIndexPlayer1), secondPlayer.getFlag().getLocation(), gameMap, secondPlayer);
-            if (gameEnded) {
-                System.out.println(firstPlayer.getName() + " venceu o jogo!");
-                resetGameState();
-                break;
+                    // Executar turno do primeiro jogador
+                    boolean gameEndedPlayer1 = false;
+                    try {
+                        gameEndedPlayer1 = executeBotTurn(firstPlayer, firstPlayer.getBots().get((round[0] - 1) % firstPlayer.getBots().size()),
+                                secondPlayer.getFlag().getLocation(), gameMap, secondPlayer);
+                    } catch (EmptyCollectionException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Executar turno do segundo jogador se o jogo não tiver terminado
+                    boolean gameEndedPlayer2 = false;
+                    if (!gameEndedPlayer1) {
+                        try {
+                            gameEndedPlayer2 = executeBotTurn(secondPlayer, secondPlayer.getBots().get((round[0] - 1) % secondPlayer.getBots().size()),
+                                    firstPlayer.getFlag().getLocation(), gameMap, firstPlayer);
+                        } catch (EmptyCollectionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // Verificar se o jogo terminou
+                    if (gameEndedPlayer1 || gameEndedPlayer2) {
+                        System.out.println("\n"+(gameEndedPlayer1 ? firstPlayer.getName() : secondPlayer.getName()) + " venceu o jogo!\n");
+                        timer.cancel(); // Cancelar o temporizador
+                        resetGameState(); // Resetar o estado do jogo
+                        isGameRunning = false; // O jogo terminou
+                        return;
+                    }
+
+                    round[0]++;
+                } else {
+                    System.out.println("O jogo terminou após 10 rodadas sem um vencedor.");
+                    timer.cancel();
+                    resetGameState();
+                    isGameRunning = false; // O jogo terminou
+                }
             }
+        };
 
-            // Execute the turn for the second player
-            gameEnded = executeBotTurn(secondPlayer, secondPlayer.getBots().get(botIndexPlayer2), firstPlayer.getFlag().getLocation(), gameMap, firstPlayer);
-            if (gameEnded) {
-                System.out.println(secondPlayer.getName() + " venceu o jogo!");
-                resetGameState();
-                break;
-            }
-
-            round++;
-        }
+        timer.scheduleAtFixedRate(task, 0, delay * 2); // Agendar a tarefa para executar a cada 2 segundos
     }
+
+
+
+
+//    private void startGame() throws EmptyCollectionException {
+//        System.out.println("\n[MESSAGEM]: jogo começou!\n");
+//
+//
+//
+//        boolean gameEnded = false;
+//
+//        int round = 1;
+//
+//        // Use a Random object to randomly choose the first player
+//        Random random = new Random();
+//        int firstPlayerIndex = random.nextInt(2); // 0 or 1 (Player 1 or Player 2)
+//        Player firstPlayer = (firstPlayerIndex == 0) ? player1 : player2;
+//        Player secondPlayer = (firstPlayer == player1) ? player2 : player1;
+//
+//        while (!gameEnded) {
+//            System.out.println("Ronda " + round + ":");
+//            // Determina qual bot joga com base na ronda atual
+//            int botIndexPlayer1 = (round - 1) % firstPlayer.getBots().size(); // Ciclo pelos bots do player 1
+//            int botIndexPlayer2 = (round - 1) % secondPlayer.getBots().size(); // Ciclo pelos bots do player 2
+//
+//            // Execute the turn for the first player
+//            gameEnded = executeBotTurn(firstPlayer, firstPlayer.getBots().get(botIndexPlayer1), secondPlayer.getFlag().getLocation(), gameMap, secondPlayer);
+//            if (gameEnded) {
+//                System.out.println(firstPlayer.getName() + " venceu o jogo!");
+//                resetGameState();
+//                break;
+//            }
+//
+//            // Execute the turn for the second player
+//            gameEnded = executeBotTurn(secondPlayer, secondPlayer.getBots().get(botIndexPlayer2), firstPlayer.getFlag().getLocation(), gameMap, firstPlayer);
+//            if (gameEnded) {
+//                System.out.println(secondPlayer.getName() + " venceu o jogo!");
+//                resetGameState();
+//                break;
+//            }
+//
+//            round++;
+//        }
+//    }
 
     public  void setFlagsMenu(Player player) {
         System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
