@@ -1,5 +1,7 @@
 package capturetheflag.game;
 
+import capturetheflag.structures.Network;
+
 public class GameRules {
     public static boolean isLocationOccupied(int location, Player player1, Player player2, int enemyFlagLocation) {
         // Pode ser ocupada se for a localização da bandeira inimiga
@@ -24,5 +26,15 @@ public class GameRules {
         }
 
         return false;
+    }
+
+    public static boolean hasMinimumAdjacentVertices(Network<Integer> network, int location, int minAdjacent) {
+        int count = 0;
+        for (int i = 0; i < network.size(); i++) {
+            if (network.edgeExists(location, i)) {
+                count++;
+            }
+        }
+        return count >= minAdjacent;
     }
 }
