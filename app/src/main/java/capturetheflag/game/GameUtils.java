@@ -58,32 +58,72 @@ public class GameUtils {
 
 
     public static void initializeBots(Player player, int numberOfBots, String playerName, Scanner scanner, GameMap gameMap) {
+        ArrayUnorderedList<AlgorithmType> chosenAlgorithms = new ArrayUnorderedList<>();
+
         for (int i = 0; i < numberOfBots; i++) {
             System.out.println(playerName + ", escolha um algoritmo para o bot " + (i + 1) + ":");
-            Algorithm algorithm = GameUtils.chooseAlgorithm(scanner, gameMap);
-            Bot bot = new Bot(player ,player.getFlag().getLocation(), algorithm, (i + 1));
+            Algorithm algorithm = GameUtils.chooseAlgorithm(scanner, gameMap, chosenAlgorithms);
+            Bot bot = new Bot(player, player.getFlag().getLocation(), algorithm, (i + 1));
             player.addBot(bot);
         }
     }
 
-    public static Algorithm chooseAlgorithm(Scanner scanner, GameMap gameMap) {
-        System.out.println("Escolha um algoritmo para o bot:");
-        System.out.println("1. Caminho mais curto (ShortestPath)");
-        System.out.println("2. Movimento aleatório");
-        System.out.println("3. Guarda (Guard)");
+    public static Algorithm chooseAlgorithm(Scanner scanner, GameMap gameMap, ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
+        int choice;
+        AlgorithmType chosenType = null;
 
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
-            case 2:
-                return new Algorithm(gameMap.getNetwork(), AlgorithmType.RANDOM_MOVE);
-            case 3:
-                return new Algorithm(gameMap.getNetwork(), AlgorithmType.GUARD);
-            default:
-                System.out.println("\n[ERRO]: Opção inválida. Escolhendo 'Caminho mais curto' por padrão.");
-                return new Algorithm(gameMap.getNetwork(), AlgorithmType.SHORTEST_PATH);
-        }
+        do {
+            printAvailableAlgorithms(chosenAlgorithms);
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    if (!chosenAlgorithms.contains(AlgorithmType.SHORTEST_PATH) || chosenAlgorithms.size() >= 3) {
+                        chosenType = AlgorithmType.SHORTEST_PATH;
+                    } else {
+                        System.out.println("\n[ERRO]: Algoritmo 'Caminho mais curto' já foi escolhido. Escolha outro.");
+                        continue;
+                    }
+                    break;
+                case 2:
+                    if (!chosenAlgorithms.contains(AlgorithmType.RANDOM_MOVE) || chosenAlgorithms.size() >= 3) {
+                        chosenType = AlgorithmType.RANDOM_MOVE;
+                    } else {
+                        System.out.println("\n[ERRO]: Algoritmo 'Movimento aleatório' já foi escolhido. Escolha outro.");
+                        continue;
+                    }
+                    break;
+                case 3:
+                    if (!chosenAlgorithms.contains(AlgorithmType.GUARD)) {
+                        chosenType = AlgorithmType.GUARD;
+                    } else {
+                        System.out.println("\n[ERRO]: Só pode existir um Bot Guarda.");
+                        continue;
+                    }
+                    break;
+                default:
+                    System.out.println("\n[ERRO]: Opção inválida.");
+                    chosenType = null;
+            }
+        } while (chosenType == null);
+
+        chosenAlgorithms.addToRear(chosenType);
+        return new Algorithm(gameMap.getNetwork(), chosenType);
     }
 
+
+    public static void printAvailableAlgorithms(ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
+        boolean canChooseGuard = !chosenAlgorithms.contains(AlgorithmType.GUARD);
+
+        System.out.println("Escolha um algoritmo para o bot:");
+        if (!chosenAlgorithms.contains(AlgorithmType.SHORTEST_PATH) || chosenAlgorithms.size() >= 3) {
+            System.out.println("1. Caminho mais curto (ShortestPath)");
+        }
+        if (!chosenAlgorithms.contains(AlgorithmType.RANDOM_MOVE) || chosenAlgorithms.size() >= 3) {
+            System.out.println("2. Movimento aleatório");
+        }
+        if (canChooseGuard) {
+            System.out.println("3. Guarda (Guard)");
+        }
+    }
 }

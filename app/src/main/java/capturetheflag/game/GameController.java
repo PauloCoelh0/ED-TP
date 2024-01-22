@@ -77,8 +77,12 @@ public class GameController {
         setFlagsMenu(player1);
         setFlagsMenu(player2);
 
-        System.out.print("Quantos bots cada jogador terá?: ");
-        int numberOfBots = scanner.nextInt();
+        int numberOfBots;
+
+        do {
+            System.out.print("Escolha o número de bots (3-5): ");
+            numberOfBots = scanner.nextInt();
+        } while (numberOfBots < 3 || numberOfBots > 5);
 
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
         initializeBots(player2, numberOfBots, player2.getName(), scanner, gameMap);
@@ -120,7 +124,6 @@ public class GameController {
                 resetGameState();
                 break;
             }
-
 
             round++;
         }
