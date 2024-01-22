@@ -1,20 +1,19 @@
 package capturetheflag;
 
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
-public class GraphVisualizerTest {
-    public static void main(String args[]) {
-        Graph graph = new SingleGraph("Graph Visualizer");
-        graph.display();
+    public class GraphVisualizerTest {
+        public static void main(String[] args) {
+            String mensagem = "Parabéns! Você é o vencedor!";
+            String arteAscii =
+                    "       _      _                   \n" +
+                            "      (_)    | |                  \n" +
+                            "__   ___  ___| |_ ___  _ __ _   _ \n" +
+                            "\\ \\ / / |/ __| __/ _ \\| '__| | | |\n" +
+                            " \\ V /| | (__| || (_) | |  | |_| |\n" +
+                            "  \\_/ |_|\\___|\\__\\___/|_|   \\__, |\n" +
+                            "                             __/ |\n" +
+                            "                            |___/ \n";
 
-        // Adicionando vértices
-        graph.addNode("A");
-        graph.addNode("B");
-        graph.addNode("C");
-
-        // Adicionando arestas
-        graph.addEdge("AB", "A", "B");
-        graph.addEdge("BC", "B", "C");
-        graph.addEdge("CA", "C", "A");
+            System.out.println(arteAscii);
+            System.out.println(mensagem);
+        }
     }
-}

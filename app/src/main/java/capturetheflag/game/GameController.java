@@ -146,6 +146,17 @@ public class GameController {
 
                     // Verificar se o jogo terminou
                     if (gameEndedPlayer1 || gameEndedPlayer2) {
+                        String arteAscii =
+                                "       _      _                   \n" +
+                                        "      (_)    | |                  \n" +
+                                        "__   ___  ___| |_ ___  _ __ _   _ \n" +
+                                        "\\ \\ / / |/ __| __/ _ \\| '__| | | |\n" +
+                                        " \\ V /| | (__| || (_) | |  | |_| |\n" +
+                                        "  \\_/ |_|\\___|\\__\\___/|_|   \\__, |\n" +
+                                        "                             __/ |\n" +
+                                        "                            |___/ \n";
+
+                        System.out.println("\n" + arteAscii);
                         System.out.println("\n"+(gameEndedPlayer1 ? firstPlayer.getName() : secondPlayer.getName()) + " venceu o jogo!\n");
                         timer.cancel(); // Cancelar o temporizador
                         resetGameState(); // Resetar o estado do jogo
