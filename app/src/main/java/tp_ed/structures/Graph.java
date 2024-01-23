@@ -1,26 +1,39 @@
 package tp_ed.structures;
 
-
 import tp_ed.structures.exceptions.EmptyCollectionException;
 import tp_ed.structures.interfaces.GraphADT;
 
 import java.util.Iterator;
 
 /**
- * Graph represents an adjacency matrix implementation of a graph.
+ * The Graph class represents an adjacency matrix implementation of a graph.
+ * This class provides methods for standard graph operations including adding and removing vertices and edges,
+ * and performing various types of traversals (such as BFS and DFS).
+ *
+ * @param <T> the type of elements held in this graph
  */
 public class Graph<T> implements GraphADT<T> {
     protected final int DEFAULT_CAPACITY = 10;
-    protected int numVertices; // number of vertices in the graph
-    protected boolean[][] adjMatrix; // adjacency matrix
-    protected T[] vertices; // values of vertices
+    protected int numVertices;
+    protected boolean[][] adjMatrix;
+    protected T[] vertices;
 
+    /**
+     * Constructs an empty graph with default capacity.
+     */
     public Graph() {
         numVertices = 0;
         this.adjMatrix = new boolean[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
         this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
     }
 
+    /**
+     * Adds an edge between two specified vertices.
+     *
+     * @param vertex1 the first vertex
+     * @param vertex2 the second vertex
+     * @throws IllegalArgumentException if a specified vertex does not exist
+     */
     public void addEdge(T vertex1, T vertex2) {
         int index1 = getIndex(vertex1);
         int index2 = getIndex(vertex2);
@@ -33,11 +46,24 @@ public class Graph<T> implements GraphADT<T> {
         }
     }
 
+    /**
+     * Adds an edge between two vertices represented by their indices.
+     * This method is intended for internal use.
+     *
+     * @param index1 index of the first vertex
+     * @param index2 index of the second vertex
+     */
     protected void addEdge(int index1, int index2) {
         adjMatrix[index1][index2] = true;
         adjMatrix[index2][index1] = true;
     }
 
+    /**
+     * Removes the edge between two specified vertices.
+     *
+     * @param vertex1 the first vertex
+     * @param vertex2 the second vertex
+     */
     public void removeEdge(T vertex1, T vertex2) {
         int index1 = getIndex(vertex1);
         int index2 = getIndex(vertex2);
@@ -242,6 +268,12 @@ public class Graph<T> implements GraphADT<T> {
         }
     }
 
+    /**
+     * Checks if the graph contains a specified vertex.
+     *
+     * @param vertex the vertex to be checked
+     * @return true if the graph contains the specified vertex, false otherwise
+     */
     public boolean containsVertex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
             if (vertices[i].equals(vertex)) {
@@ -251,6 +283,10 @@ public class Graph<T> implements GraphADT<T> {
         return false;
     }
 
+    /**
+     * Expands the capacity of the graph.
+     * This method is intended for internal use when the number of vertices exceeds the capacity.
+     */
     protected void expandCapacity() {
         T[] largerVertices = (T[]) (new Object[vertices.length * 2]);
         boolean[][] largerAdjMatrix = new boolean[vertices.length * 2][vertices.length * 2];
@@ -269,6 +305,12 @@ public class Graph<T> implements GraphADT<T> {
         return numVertices == 0;
     }
 
+    /**
+     * Checks if the graph is connected, meaning there is a path between every pair of vertices.
+     *
+     * @return true if the graph is connected, false otherwise
+     * @throws EmptyCollectionException if the graph is empty
+     */
     @Override
     public boolean isConnected() throws EmptyCollectionException {
         //Realiza uma travessia BFS a partir do primeiro vértice e verifica se todos os vértices foram visitados.
@@ -302,11 +344,21 @@ public class Graph<T> implements GraphADT<T> {
         return true;
     }
 
+    /**
+     * Returns the number of vertices in the graph.
+     *
+     * @return the number of vertices
+     */
     @Override
     public int size() {
         return numVertices;
     }
 
+    /**
+     * Returns a string representation of the graph.
+     *
+     * @return a string representation
+     */
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
@@ -320,7 +372,13 @@ public class Graph<T> implements GraphADT<T> {
         return s.toString();
     }
 
-    // Método para obter o índice de um vértice
+    /**
+     * Obtains the index of a specified vertex.
+     * This method is intended for internal use.
+     *
+     * @param vertex the vertex whose index is to be obtained
+     * @return the index of the specified vertex
+     */
     protected int getIndex(T vertex) {
         for (int i = 0; i < numVertices; i++) {
             if (vertices[i].equals(vertex)) {
@@ -330,7 +388,13 @@ public class Graph<T> implements GraphADT<T> {
         return -1;
     }
 
-    // Método para verificar se um índice é válido
+    /**
+     * Checks if a given index is valid for the vertices array.
+     * This method is intended for internal use.
+     *
+     * @param index the index to be checked
+     * @return true if the index is valid, false otherwise
+     */
     protected boolean indexIsValid(int index) {
         return index >= 0 && index < numVertices;
     }
