@@ -2,6 +2,8 @@ package tp_ed.capturetheflag.game;
 
 import tp_ed.structures.Network;
 
+import static tp_ed.capturetheflag.game.GameController.scanner;
+
 public class GameRules {
     public static boolean isLocationOccupied(int location, Player player1, Player player2, int enemyFlagLocation) {
         // Pode ser ocupada se for a localização da bandeira inimiga
@@ -36,5 +38,35 @@ public class GameRules {
             }
         }
         return count >= minAdjacent;
+    }
+
+    public static int readIntSafely() {
+        while (true) {
+            if (scanner.hasNextInt()) {
+                return scanner.nextInt();
+            } else {
+                System.out.println("\n[ERRO]: Insira um número inteiro: ");
+                scanner.next();
+            }
+        }
+    }
+
+    public static boolean readBooleanSafely() {
+        while (true) {
+            String input = scanner.next();
+            if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                return Boolean.parseBoolean(input);
+            } else {
+                System.out.println("\n[ERRO]: Insira 'true' ou 'false': ");
+            }
+        }
+    }
+
+    public static double readDoubleSafely() {
+        while (!scanner.hasNextDouble()) {
+            System.out.println("\n[ERRO]: Insira um número válido: ");
+            scanner.next();
+        }
+        return scanner.nextDouble();
     }
 }

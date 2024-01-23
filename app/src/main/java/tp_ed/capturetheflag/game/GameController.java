@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+import static tp_ed.capturetheflag.game.GameRules.*;
 import static tp_ed.capturetheflag.game.GameUtils.executeBotTurn;
 import static tp_ed.capturetheflag.game.GameUtils.initializeBots;
 
@@ -19,27 +20,16 @@ public class GameController {
     private static GameMap gameMap;
     private Player player1;
     private Player player2;
-    private static Scanner scanner;
+    public static Scanner scanner;
     private static boolean isGameRunning = false;
 
     public GameController() {
-        this.scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         this.player1 = new Player("Player 1");
         this.player2 = new Player("Player 2");
     }
 
-    private int readIntSafely() {
-        while (true) {
-            if (scanner.hasNextInt()) {
-                return scanner.nextInt();
-            } else {
-                System.out.println("\n[ERRO]: Entrada inválida. Por favor, insira um número inteiro: ");
-                scanner.next();
-            }
-        }
-    }
-
-    public void start() throws EmptyCollectionException {
+    public void start() {
         System.out.println("\n\n=================================");
         System.out.println("| Bem-vindo ao Capture the Flag! |");
         System.out.println("=================================\n");
@@ -91,24 +81,27 @@ public class GameController {
     }
 
     private void setupGame() {
+        int numberOfBots;
+
         setFlagsMenu(player1);
         setFlagsMenu(player2);
 
-        int numberOfBots;
-
         do {
             System.out.print("Escolha o número de bots (3-5): ");
-            numberOfBots = scanner.nextInt();
+            numberOfBots = readIntSafely();
+            if (numberOfBots < 3 || numberOfBots > 5) {
+                System.out.println("[ERRO]: Número inválido. Por favor, escolha um número entre 3 e 5.");
+            }
         } while (numberOfBots < 3 || numberOfBots > 5);
 
-        initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
-        initializeBots(player2, numberOfBots, player2.getName(), scanner, gameMap);
+        initializeBots(player1, numberOfBots, player1.getName(), gameMap);
+        initializeBots(player2, numberOfBots, player2.getName(), gameMap);
 
         player1.printBotsInfo();
         player2.printBotsInfo();
     }
 
-    private void startGame() throws EmptyCollectionException {
+    private void startGame() {
         System.out.println("\n[MESSAGEM]: O jogo começou!\n");
         isGameRunning = true;
 
@@ -151,15 +144,16 @@ public class GameController {
                     // Verificar se o jogo terminou
                     if (gameEndedPlayer1 || gameEndedPlayer2) {
                         String arteAscii =
-                                "__/\\\\\\________/\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_______/\\\\\\\\\\_________/\\\\\\\\\\\\\\\\\\______/\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\\\\\\\\\\\\\____        \n" +
-                                        " _\\/\\\\\\_______\\/\\\\\\_\\/////\\\\\\///__\\///////\\\\\\/////______/\\\\\\///\\\\\\_____/\\\\\\///////\\\\\\___\\/////\\\\\\///____/\\\\\\\\\\\\\\\\\\\\\\\\\\__       \n" +
-                                        "  _\\//\\\\\\______/\\\\\\______\\/\\\\\\___________\\/\\\\\\_________/\\\\\\/__\\///\\\\\\__\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\______/\\\\\\/////////\\\\\\_      \n" +
-                                        "   __\\//\\\\\\____/\\\\\\_______\\/\\\\\\___________\\/\\\\\\________/\\\\\\______\\//\\\\\\_\\/\\\\\\\\\\\\\\\\\\\\\\/________\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_     \n" +
-                                        "    ___\\//\\\\\\__/\\\\\\________\\/\\\\\\___________\\/\\\\\\_______\\/\\\\\\_______\\/\\\\\\_\\/\\\\\\//////\\\\\\________\\/\\\\\\_____\\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_    \n" +
-                                        "     ____\\//\\\\\\/\\\\\\_________\\/\\\\\\___________\\/\\\\\\_______\\//\\\\\\______/\\\\\\__\\/\\\\\\____\\//\\\\\\_______\\/\\\\\\_____\\/\\\\\\/////////\\\\\\_   \n" +
-                                        "      _____\\//\\\\\\\\\\__________\\/\\\\\\___________\\/\\\\\\________\\///\\\\\\__/\\\\\\____\\/\\\\\\_____\\//\\\\\\______\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_  \n" +
-                                        "       ______\\//\\\\\\________/\\\\\\\\\\\\\\\\\\\\\\_______\\/\\\\\\__________\\///\\\\\\\\\\/_____\\/\\\\\\______\\//\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\_______\\/\\\\\\_ \n" +
-                                        "        _______\\///________\\///////////________\\///_____________\\/////_______\\///________\\///__\\///////////__\\///________\\///__";
+                                """
+                                        __/\\\\\\________/\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_______/\\\\\\\\\\_________/\\\\\\\\\\\\\\\\\\______/\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\\\\\\\\\\\\\____       \s
+                                         _\\/\\\\\\_______\\/\\\\\\_\\/////\\\\\\///__\\///////\\\\\\/////______/\\\\\\///\\\\\\_____/\\\\\\///////\\\\\\___\\/////\\\\\\///____/\\\\\\\\\\\\\\\\\\\\\\\\\\__      \s
+                                          _\\//\\\\\\______/\\\\\\______\\/\\\\\\___________\\/\\\\\\_________/\\\\\\/__\\///\\\\\\__\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\______/\\\\\\/////////\\\\\\_     \s
+                                           __\\//\\\\\\____/\\\\\\_______\\/\\\\\\___________\\/\\\\\\________/\\\\\\______\\//\\\\\\_\\/\\\\\\\\\\\\\\\\\\\\\\/________\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_    \s
+                                            ___\\//\\\\\\__/\\\\\\________\\/\\\\\\___________\\/\\\\\\_______\\/\\\\\\_______\\/\\\\\\_\\/\\\\\\//////\\\\\\________\\/\\\\\\_____\\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_   \s
+                                             ____\\//\\\\\\/\\\\\\_________\\/\\\\\\___________\\/\\\\\\_______\\//\\\\\\______/\\\\\\__\\/\\\\\\____\\//\\\\\\_______\\/\\\\\\_____\\/\\\\\\/////////\\\\\\_  \s
+                                              _____\\//\\\\\\\\\\__________\\/\\\\\\___________\\/\\\\\\________\\///\\\\\\__/\\\\\\____\\/\\\\\\_____\\//\\\\\\______\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_ \s
+                                               ______\\//\\\\\\________/\\\\\\\\\\\\\\\\\\\\\\_______\\/\\\\\\__________\\///\\\\\\\\\\/_____\\/\\\\\\______\\//\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\_______\\/\\\\\\_\s
+                                                _______\\///________\\///////////________\\///_____________\\/////_______\\///________\\///__\\///////////__\\///________\\///__""";
 
                         System.out.println("\n" + arteAscii);
                         System.out.println("\n["+(gameEndedPlayer1 ? firstPlayer.getName() : secondPlayer.getName())+"]" + " VENCEU O JOGO!!!\n");
@@ -177,7 +171,7 @@ public class GameController {
                     System.out.println("O jogo terminou após 100 rodadas sem um vencedor.");
                     timer.cancel();
                     resetGameState();
-                    isGameRunning = false; // O jogo terminou
+                    isGameRunning = false;
                 }
             }
         };
@@ -185,12 +179,12 @@ public class GameController {
         timer.scheduleAtFixedRate(task, 0, delay * 2); // Agendar a tarefa para executar a cada 2 segundos
     }
 
-    public  void setFlagsMenu(Player player) {
+    public void setFlagsMenu(Player player) {
         int flagLocation;
 
         do {
             System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
-            flagLocation = scanner.nextInt();
+            flagLocation = readIntSafely();
 
             if (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size()) {
                 System.out.println("\n[ERRO]: Localização inválida.");
@@ -214,26 +208,40 @@ public class GameController {
     }
 
     private static void generateMapMenu() {
+        int numLocations;
+        boolean isBidirectional;
+        double density;
+
         try {
-            //TODO colocar limite se for para utilizar.
-            System.out.print("Insira a quantidade de localizações [10-100]: ");
-            int numLocations = scanner.nextInt();
+            do {
+                System.out.print("Insira a quantidade de localizações [10-100]: ");
+                numLocations = readIntSafely();
+            } while (numLocations < 10 || numLocations > 100);
 
             System.out.print("Caminhos bidirecionais ? [true/false]: ");
-            boolean isBidirectional = scanner.nextBoolean();
+            isBidirectional = readBooleanSafely();
 
-            System.out.print("Insira a densidade das arestas [0-1]: ");
-            double density = scanner.nextDouble();
+            do {
+                System.out.print("Insira a densidade das arestas [0-1] (Ex: 0,2): ");
+                density = readDoubleSafely();
+            } while (density < 0 || density > 1);
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
 
-            System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
-            // Exportação opcional do mapa
+            System.out.println("[MENSSAGEM]: O mapa foi criado com sucesso!");
+
             System.out.print("Deseja exportar o mapa para um arquivo? [true/false]: ");
-            boolean export = scanner.nextBoolean();
+            boolean export = readBooleanSafely();
             if (export) {
-                System.out.println("Insira o nome do arquivo para salvar o mapa (ex: map.json): ");
-                String filename = scanner.next();
+                String filename;
+                do {
+                    System.out.print("Insira o nome do ficheiro para guardar o mapa (ex: mapa.json): ");
+                    filename = scanner.next();
+                    if (!filename.endsWith(".json")) {
+                        System.out.println("[ERRO]: O nome do ficheiro deve terminar em '.json'.");
+                    }
+                } while (!filename.endsWith(".json"));
+
                 JsonUtil.exportNetworkToJson(gameMap.getNetwork(), filename);
                 System.out.println("Mapa exportado com sucesso para " + filename);
             }
@@ -243,16 +251,23 @@ public class GameController {
     }
 
     private static void importMapMenu() {
-        System.out.println("Digite o nome do arquivo para importar o mapa: ");
-        String filename = scanner.next();
+        String filename;
+
+        do {
+            System.out.print("Digite o nome do arquivo para importar o mapa (ex: mapa.json): ");
+            filename = scanner.next();
+            if (!filename.endsWith(".json")) {
+                System.out.println("[ERRO]: O nome do arquivo deve terminar com '.json'.");
+            }
+        } while (!filename.endsWith(".json"));
 
         try {
             Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename);
-            System.out.println("Grafo importado com sucesso!");
+            System.out.println("Mapa importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);
         } catch (IOException e) {
-            System.err.println("Erro ao importar o grafo: " + e.getMessage());
+            System.err.println("Erro ao importar o mapa: " + e.getMessage());
         }
     }
 

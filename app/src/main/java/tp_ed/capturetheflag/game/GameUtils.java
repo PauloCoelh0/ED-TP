@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import static tp_ed.capturetheflag.game.GameRules.isLocationOccupied;
+import static tp_ed.capturetheflag.game.GameRules.readIntSafely;
 
 public class GameUtils {
     public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException, ElementNotFoundException {
@@ -61,25 +62,24 @@ public class GameUtils {
         return reachedFlag;
     }
 
-
-    public static void initializeBots(Player player, int numberOfBots, String playerName, Scanner scanner, GameMap gameMap) {
+    public static void initializeBots(Player player, int numberOfBots, String playerName, GameMap gameMap) {
         ArrayUnorderedList<AlgorithmType> chosenAlgorithms = new ArrayUnorderedList<>();
 
         for (int i = 0; i < numberOfBots; i++) {
             System.out.println(playerName + ", escolha um algoritmo para o bot " + (i + 1) + ":");
-            Algorithm algorithm = GameUtils.chooseAlgorithm(scanner, gameMap, chosenAlgorithms);
+            Algorithm algorithm = GameUtils.chooseAlgorithm(gameMap, chosenAlgorithms);
             Bot bot = new Bot(player, player.getFlag().getLocation(), algorithm, (i + 1));
             player.addBot(bot);
         }
     }
 
-    public static Algorithm chooseAlgorithm(Scanner scanner, GameMap gameMap, ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
+    public static Algorithm chooseAlgorithm(GameMap gameMap, ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
         int choice;
         AlgorithmType chosenType = null;
 
         do {
             printAvailableAlgorithms(chosenAlgorithms);
-            choice = scanner.nextInt();
+            choice = readIntSafely();
 
             switch (choice) {
                 case 1:
@@ -108,14 +108,12 @@ public class GameUtils {
                     break;
                 default:
                     System.out.println("\n[ERRO]: Opção inválida.");
-                    chosenType = null;
             }
         } while (chosenType == null);
 
         chosenAlgorithms.addToRear(chosenType);
         return new Algorithm(gameMap.getNetwork(), chosenType);
     }
-
 
     public static void printAvailableAlgorithms(ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
         boolean canChooseGuard = !chosenAlgorithms.contains(AlgorithmType.GUARD);
