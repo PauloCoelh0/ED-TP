@@ -277,16 +277,23 @@ public class GameController {
     }
 
     private static void importMapMenu() {
-        System.out.println("Digite o nome do arquivo para importar o mapa: ");
-        String filename = scanner.next();
+        String filename;
+
+        do {
+            System.out.print("Digite o nome do arquivo para importar o mapa (ex: mapa.json): ");
+            filename = scanner.next();
+            if (!filename.endsWith(".json")) {
+                System.out.println("[ERRO]: O nome do arquivo deve terminar com '.json'.");
+            }
+        } while (!filename.endsWith(".json"));
 
         try {
             Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename);
-            System.out.println("Grafo importado com sucesso!");
+            System.out.println("Mapa importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);
         } catch (IOException e) {
-            System.err.println("Erro ao importar o grafo: " + e.getMessage());
+            System.err.println("Erro ao importar o mapa: " + e.getMessage());
         }
     }
 
