@@ -298,9 +298,8 @@ public class GameController {
 
         try {
             Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename);
-            System.out.println("[MENSAGEM]: Mapa importado com sucesso!");
-
             gameMap = new GameMap(importedNetwork);
+            System.out.println("[MENSAGEM]: Mapa importado com sucesso!");
         } catch (IOException e) {
             System.err.println("[MENSAGEM]: Erro ao importar o mapa: " + e.getMessage());
         }

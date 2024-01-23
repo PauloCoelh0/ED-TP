@@ -60,10 +60,7 @@ public class JsonUtil {
                 double weight = edgeObject.getDouble("weight");
                 network.addEdge(vertex1, vertex2, weight);
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao importar o grafo: " + e.getMessage());
         }
-
         return network;
     }
 }

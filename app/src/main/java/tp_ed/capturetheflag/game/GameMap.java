@@ -201,7 +201,7 @@ public class GameMap {
         }
 
         // Configuração do estilo visual do grafo
-        graph.addAttribute("ui.stylesheet", "node { fill-color: red; size: 20px; text-size: 20; } edge { fill-color: grey; }");
+        graph.addAttribute("ui.stylesheet", "node { fill-color: red; size: 20px; text-size: 20; } edge { fill-color: grey; size: 2px; text-size: 12; text-color: black; text-background-mode: plain; text-background-color: white; }");
 
         // Adicionando vértices
         for (int i = 0; i < numLocations; i++) {
@@ -210,12 +210,14 @@ public class GameMap {
             node.addAttribute("ui.label", Integer.toString(i));
         }
 
-        // Adicionando arestas
+        // Adicionando arestas com pesos
         for (int i = 0; i < numLocations; i++) {
             for (int j = 0; j < numLocations; j++) {
-                if (network.edgeExists(i, j)) {
+                if (network.edgeExists(i, j) && graph.getEdge(i + "_" + j) == null) {
+                    double weight = network.getWeight(i, j);
                     String edgeId = i + "_" + j;
                     graph.addEdge(edgeId, Integer.toString(i), Integer.toString(j), true); // true para arestas direcionadas se necessário
+                    graph.getEdge(edgeId).addAttribute("ui.label", String.format("%.2f", weight));
                 }
             }
         }
