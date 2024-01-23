@@ -111,14 +111,17 @@ public class GameController {
     }
 
     private void setupGame() {
+        int numberOfBots;
+
         setFlagsMenu(player1);
         setFlagsMenu(player2);
 
-        int numberOfBots;
-
         do {
             System.out.print("Escolha o número de bots (3-5): ");
-            numberOfBots = scanner.nextInt();
+            numberOfBots = readIntSafely();
+            if (numberOfBots < 3 || numberOfBots > 5) {
+                System.out.println("[ERRO]: Número inválido. Por favor, escolha um número entre 3 e 5.");
+            }
         } while (numberOfBots < 3 || numberOfBots > 5);
 
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
@@ -128,7 +131,7 @@ public class GameController {
         player2.printBotsInfo();
     }
 
-    private void startGame() throws EmptyCollectionException {
+    private void startGame() {
         System.out.println("\n[MESSAGEM]: O jogo começou!\n");
         isGameRunning = true;
 
