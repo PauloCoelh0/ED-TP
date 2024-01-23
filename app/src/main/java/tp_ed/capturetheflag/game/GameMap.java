@@ -28,6 +28,7 @@ public class GameMap {
     public GameMap(Network<Integer> importedNetwork) {
         this.network = importedNetwork;
         this.numLocations = importedNetwork.size();
+        this.botLocations = new ArrayUnorderedList<>();
         printVisualMap();
     }
 
