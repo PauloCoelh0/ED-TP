@@ -89,20 +89,11 @@ public class Bot {
      * @return A string with the bot's information.
      */
     public String getInfo() {
-        String algorithmName;
-        switch (algorithm.getType()) {
-            case SHORTEST_PATH:
-                algorithmName = "FLASH";
-                break;
-            case RANDOM_MOVE:
-                algorithmName = "LOKI";
-                break;
-            case GUARD:
-                algorithmName = "HULK";
-                break;
-            default:
-                algorithmName = "Desconhecido";
-        }
+        String algorithmName = switch (algorithm.getType()) {
+            case SHORTEST_PATH -> "FLASH";
+            case RANDOM_MOVE -> "LOKI";
+            case GUARD -> "HULK";
+        };
         return "O Bot " + botNumber + " está na posição " + location + " e é o " + algorithmName;
     }
 }
