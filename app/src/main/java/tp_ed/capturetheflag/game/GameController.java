@@ -238,7 +238,7 @@ public class GameController {
                     System.out.print("Insira o nome do ficheiro para guardar o mapa (ex: mapa.json): ");
                     filename = scanner.next();
                     if (!filename.endsWith(".json")) {
-                        System.out.print("[ERRO]: O nome do ficheiro deve terminar em '.json': ");
+                        System.out.println("[ERRO]: O nome do ficheiro deve terminar em '.json'. ");
                     }
                 } while (!filename.endsWith(".json"));
 
