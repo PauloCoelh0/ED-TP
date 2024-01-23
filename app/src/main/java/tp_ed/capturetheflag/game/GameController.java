@@ -205,12 +205,12 @@ public class GameController {
         timer.scheduleAtFixedRate(task, 0, delay * 2); // Agendar a tarefa para executar a cada 2 segundos
     }
 
-    public  void setFlagsMenu(Player player) {
+    public void setFlagsMenu(Player player) {
         int flagLocation;
 
         do {
             System.out.print(player.getName() + ", escolha a localização da sua bandeira [0-" + (gameMap.getNetwork().size() - 1) + "]: ");
-            flagLocation = scanner.nextInt();
+            flagLocation = readIntSafely();
 
             if (flagLocation < 0 || flagLocation >= gameMap.getNetwork().size()) {
                 System.out.println("\n[ERRO]: Localização inválida.");
