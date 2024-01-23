@@ -10,7 +10,24 @@ import java.util.Scanner;
 import static tp_ed.capturetheflag.game.GameRules.isLocationOccupied;
 import static tp_ed.capturetheflag.game.GameRules.readIntSafely;
 
+/**
+ * The GameUtils class provides utility methods for gameplay mechanics in the game.
+ * It includes methods for executing bot turns, initializing bots, and choosing algorithms for bots.
+ */
 public class GameUtils {
+
+    /**
+     * Executes a turn for a given bot, determining its next move based on the current game state.
+     *
+     * @param player The player to whom the bot belongs.
+     * @param bot The bot that is taking the turn.
+     * @param flagLocation The location of the enemy's flag.
+     * @param gameMap The game map.
+     * @param enemy The enemy player.
+     * @return True if the bot reaches the enemy's flag, false otherwise.
+     * @throws EmptyCollectionException If a required collection is empty.
+     * @throws ElementNotFoundException If a required element is not found.
+     */
     public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException, ElementNotFoundException {
         int oldLocation = bot.getLocation(); // Localização anterior para registro
         int teamFlagLocation = player.getFlag().getLocation();
@@ -62,6 +79,14 @@ public class GameUtils {
         return reachedFlag;
     }
 
+    /**
+     * Initializes bots for a player, setting their algorithms and positions.
+     *
+     * @param player The player for whom the bots are being initialized.
+     * @param numberOfBots The number of bots to initialize.
+     * @param playerName The name of the player.
+     * @param gameMap The game map.
+     */
     public static void initializeBots(Player player, int numberOfBots, String playerName, GameMap gameMap) {
         ArrayUnorderedList<AlgorithmType> chosenAlgorithms = new ArrayUnorderedList<>();
 
@@ -73,6 +98,13 @@ public class GameUtils {
         }
     }
 
+    /**
+     * Allows a player to choose an algorithm for a bot based on available options.
+     *
+     * @param gameMap The game map.
+     * @param chosenAlgorithms The list of already chosen algorithms to ensure diversity.
+     * @return The selected algorithm.
+     */
     public static Algorithm chooseAlgorithm(GameMap gameMap, ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
         int choice;
         AlgorithmType chosenType = null;
@@ -115,6 +147,11 @@ public class GameUtils {
         return new Algorithm(gameMap.getNetwork(), chosenType);
     }
 
+    /**
+     * Prints the available algorithms for bots to the console, indicating the choices left.
+     *
+     * @param chosenAlgorithms The list of already chosen algorithms.
+     */
     public static void printAvailableAlgorithms(ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
         boolean canChooseGuard = !chosenAlgorithms.contains(AlgorithmType.GUARD);
 
