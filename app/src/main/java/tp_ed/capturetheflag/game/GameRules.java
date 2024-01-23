@@ -45,7 +45,7 @@ public class GameRules {
             if (scanner.hasNextInt()) {
                 return scanner.nextInt();
             } else {
-                System.out.println("\n[ERRO]: Insira um número inteiro: ");
+                System.out.print("\n[ERRO]: Insira um número inteiro: ");
                 scanner.next();
             }
         }
@@ -57,14 +57,14 @@ public class GameRules {
             if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
                 return Boolean.parseBoolean(input);
             } else {
-                System.out.println("\n[ERRO]: Insira 'true' ou 'false': ");
+                System.out.print("\n[ERRO]: Insira 'true' ou 'false': ");
             }
         }
     }
 
     public static double readDoubleSafely() {
         while (!scanner.hasNextDouble()) {
-            System.out.println("\n[ERRO]: Insira um número válido: ");
+            System.out.print("\n[ERRO]: Insira um número válido: ");
             scanner.next();
         }
         return scanner.nextDouble();

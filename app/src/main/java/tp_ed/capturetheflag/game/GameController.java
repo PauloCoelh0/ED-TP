@@ -65,7 +65,7 @@ public class GameController {
                         break;
                     case 5:
                         running = false;
-                        System.out.println("\n[MESSAGEM]: Saindo...\n");
+                        System.out.println("\n[MENSAGEM]: Saindo...\n");
                         break;
                     default:
                         System.out.println("\n[ERRO]: Opção Inválida.\n");
@@ -75,7 +75,7 @@ public class GameController {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                System.out.println("Erro: " + e.getMessage());
+                System.out.println("[Erro]: " + e.getMessage());
             }
         }
     }
@@ -102,7 +102,7 @@ public class GameController {
     }
 
     private void startGame() {
-        System.out.println("\n[MESSAGEM]: O jogo começou!\n");
+        System.out.println("\n[MENSAGEM]: O jogo começou!\n");
         isGameRunning = true;
 
         Timer timer = new Timer();
@@ -168,7 +168,7 @@ public class GameController {
 
                     round[0]++;
                 } else {
-                    System.out.println("O jogo terminou após 100 rodadas sem um vencedor.");
+                    System.out.println("[MENSAGEM]: O jogo terminou após 100 rodadas sem um vencedor.");
                     timer.cancel();
                     resetGameState();
                     isGameRunning = false;
@@ -228,7 +228,7 @@ public class GameController {
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
 
-            System.out.println("[MENSSAGEM]: O mapa foi criado com sucesso!");
+            System.out.println("[MENSAGEM]: O mapa foi criado com sucesso!");
 
             System.out.print("Deseja exportar o mapa para um arquivo? [true/false]: ");
             boolean export = readBooleanSafely();
@@ -238,15 +238,15 @@ public class GameController {
                     System.out.print("Insira o nome do ficheiro para guardar o mapa (ex: mapa.json): ");
                     filename = scanner.next();
                     if (!filename.endsWith(".json")) {
-                        System.out.println("[ERRO]: O nome do ficheiro deve terminar em '.json'.");
+                        System.out.print("[ERRO]: O nome do ficheiro deve terminar em '.json': ");
                     }
                 } while (!filename.endsWith(".json"));
 
                 JsonUtil.exportNetworkToJson(gameMap.getNetwork(), filename);
-                System.out.println("Mapa exportado com sucesso para " + filename);
+                System.out.println("[MENSAGEM]: Mapa exportado com sucesso para " + filename);
             }
         } catch (EmptyCollectionException e) {
-            System.err.println("Erro ao gerar o mapa: " + e.getMessage());
+            System.err.println("[MENSAGEM]: Erro ao gerar o mapa: " + e.getMessage());
         }
     }
 
@@ -257,17 +257,17 @@ public class GameController {
             System.out.print("Digite o nome do arquivo para importar o mapa (ex: mapa.json): ");
             filename = scanner.next();
             if (!filename.endsWith(".json")) {
-                System.out.println("[ERRO]: O nome do arquivo deve terminar com '.json'.");
+                System.out.println("\n[ERRO]: O nome do arquivo deve terminar com '.json'\n");
             }
         } while (!filename.endsWith(".json"));
 
         try {
             Network<Integer> importedNetwork = JsonUtil.importNetworkFromJson(filename);
-            System.out.println("Mapa importado com sucesso!");
+            System.out.println("[MENSAGEM]: Mapa importado com sucesso!");
 
             gameMap = new GameMap(importedNetwork);
         } catch (IOException e) {
-            System.err.println("Erro ao importar o mapa: " + e.getMessage());
+            System.err.println("[MENSAGEM]: Erro ao importar o mapa: " + e.getMessage());
         }
     }
 

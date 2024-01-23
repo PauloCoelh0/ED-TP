@@ -39,18 +39,17 @@ public class Bot {
         this.location = location;
     }
 
-    //TODO Mudar o nome dos bots
     public String getInfo() {
         String algorithmName;
         switch (algorithm.getType()) {
             case SHORTEST_PATH:
-                algorithmName = "Sonic";
+                algorithmName = "FLASH";
                 break;
             case RANDOM_MOVE:
-                algorithmName = "Toninho";
+                algorithmName = "LOKI";
                 break;
             case GUARD:
-                algorithmName = "GNR";
+                algorithmName = "HULK";
                 break;
             default:
                 algorithmName = "Desconhecido";

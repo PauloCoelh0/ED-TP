@@ -86,7 +86,7 @@ public class GameUtils {
                     if (!chosenAlgorithms.contains(AlgorithmType.SHORTEST_PATH) || chosenAlgorithms.size() >= 3) {
                         chosenType = AlgorithmType.SHORTEST_PATH;
                     } else {
-                        System.out.println("\n[ERRO]: Algoritmo 'Caminho mais curto' já foi escolhido. Escolha outro.");
+                        System.out.println("\n[ERRO]: Bot [FLASH] já foi escolhido. Escolha outro!");
                         continue;
                     }
                     break;
@@ -94,7 +94,7 @@ public class GameUtils {
                     if (!chosenAlgorithms.contains(AlgorithmType.RANDOM_MOVE) || chosenAlgorithms.size() >= 3) {
                         chosenType = AlgorithmType.RANDOM_MOVE;
                     } else {
-                        System.out.println("\n[ERRO]: Algoritmo 'Movimento aleatório' já foi escolhido. Escolha outro.");
+                        System.out.println("\n[ERRO]: Bot [LOKI] já foi escolhido. Escolha outro!");
                         continue;
                     }
                     break;
@@ -102,12 +102,12 @@ public class GameUtils {
                     if (!chosenAlgorithms.contains(AlgorithmType.GUARD)) {
                         chosenType = AlgorithmType.GUARD;
                     } else {
-                        System.out.println("\n[ERRO]: Só pode existir um Bot Guarda.");
+                        System.out.println("\n[ERRO]: Só pode existir um Bot [DEFESA]");
                         continue;
                     }
                     break;
                 default:
-                    System.out.println("\n[ERRO]: Opção inválida.");
+                    System.out.println("\n[ERRO]: Opção inválida!");
             }
         } while (chosenType == null);
 
@@ -118,15 +118,16 @@ public class GameUtils {
     public static void printAvailableAlgorithms(ArrayUnorderedList<AlgorithmType> chosenAlgorithms) {
         boolean canChooseGuard = !chosenAlgorithms.contains(AlgorithmType.GUARD);
 
-        System.out.println("Escolha um algoritmo para o bot:");
+
         if (!chosenAlgorithms.contains(AlgorithmType.SHORTEST_PATH) || chosenAlgorithms.size() >= 3) {
-            System.out.println("1. Caminho mais curto (ShortestPath)");
+            System.out.println("\n1. FLASH [ATAQUE] - Procura o caminho mais curto para a base inimiga, e recalcula o seu caminho se for encurralado.");
         }
         if (!chosenAlgorithms.contains(AlgorithmType.RANDOM_MOVE) || chosenAlgorithms.size() >= 3) {
-            System.out.println("2. Movimento aleatório");
+            System.out.println("2. LOKI [SUPORTE] - Anda pelo mapa de maneira aleatoria, distrai e encurrala.");
         }
         if (canChooseGuard) {
-            System.out.println("3. Guarda (Guard)");
+            System.out.println("3. HULK [DEFESA] - Desloca-se para uma posicao adjacente a base e fica de guarda bloqueando um possivel caminho de vitoria.");
         }
+        System.out.print("\nEscolha um algoritmo para o bot: ");
     }
 }
