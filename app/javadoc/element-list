@@ -1,0 +1,8 @@
+tp_ed.capturetheflag.game
+tp_ed.capturetheflag.utils
+tp_ed.client
+tp_ed.structures
+tp_ed.structures.exceptions
+tp_ed.structures.interfaces
+tp_ed.structures.IteradoresArrayBinaryTree
+tp_ed.structures.nodes
