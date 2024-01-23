@@ -28,16 +28,36 @@ public class GameController {
         this.player2 = new Player("Player 2");
     }
 
-    private int readIntSafely() {
+    private static int readIntSafely() {
         while (true) {
             if (scanner.hasNextInt()) {
                 return scanner.nextInt();
             } else {
-                System.out.println("\n[ERRO]: Entrada inválida. Por favor, insira um número inteiro: ");
+                System.out.println("\n[ERRO]: Insira um número inteiro: ");
                 scanner.next();
             }
         }
     }
+
+    private static boolean readBooleanSafely() {
+        while (true) {
+            String input = scanner.next();
+            if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                return Boolean.parseBoolean(input);
+            } else {
+                System.out.println("\n[ERRO]: Insira 'true' ou 'false': ");
+            }
+        }
+    }
+
+    private static double readDoubleSafely() {
+        while (!scanner.hasNextDouble()) {
+            System.out.println("\n[ERRO]: Insira um número válido: ");
+            scanner.next();
+        }
+        return scanner.nextDouble();
+    }
+
 
     public void start() throws EmptyCollectionException {
         System.out.println("\n\n=================================");
@@ -177,7 +197,7 @@ public class GameController {
                     System.out.println("O jogo terminou após 100 rodadas sem um vencedor.");
                     timer.cancel();
                     resetGameState();
-                    isGameRunning = false; // O jogo terminou
+                    isGameRunning = false;
                 }
             }
         };
@@ -214,26 +234,40 @@ public class GameController {
     }
 
     private static void generateMapMenu() {
+        int numLocations;
+        boolean isBidirectional;
+        double density = 0;
+
         try {
-            //TODO colocar limite se for para utilizar.
-            System.out.print("Insira a quantidade de localizações [10-100]: ");
-            int numLocations = scanner.nextInt();
+            do {
+                System.out.print("Insira a quantidade de localizações [10-100]: ");
+                numLocations = readIntSafely();
+            } while (numLocations < 10 || numLocations > 100);
 
             System.out.print("Caminhos bidirecionais ? [true/false]: ");
-            boolean isBidirectional = scanner.nextBoolean();
+            isBidirectional = readBooleanSafely();
 
-            System.out.print("Insira a densidade das arestas [0-1]: ");
-            double density = scanner.nextDouble();
+            do {
+                System.out.print("Insira a densidade das arestas [0-1] (Ex: 0,2): ");
+                density = readDoubleSafely();
+            } while (density < 0 || density > 1);
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
 
-            System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
-            // Exportação opcional do mapa
+            System.out.println("[MENSSAGEM]: O mapa foi criado com sucesso!");
+
             System.out.print("Deseja exportar o mapa para um arquivo? [true/false]: ");
-            boolean export = scanner.nextBoolean();
+            boolean export = readBooleanSafely();
             if (export) {
-                System.out.println("Insira o nome do arquivo para salvar o mapa (ex: map.json): ");
-                String filename = scanner.next();
+                String filename;
+                do {
+                    System.out.print("Insira o nome do ficheiro para guardar o mapa (ex: mapa.json): ");
+                    filename = scanner.next();
+                    if (!filename.endsWith(".json")) {
+                        System.out.println("[ERRO]: O nome do ficheiro deve terminar em '.json'.");
+                    }
+                } while (!filename.endsWith(".json"));
+
                 JsonUtil.exportNetworkToJson(gameMap.getNetwork(), filename);
                 System.out.println("Mapa exportado com sucesso para " + filename);
             }
