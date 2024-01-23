@@ -40,9 +40,9 @@ public class GameController {
     }
 
     public void start() throws EmptyCollectionException {
-        System.out.println("=================================");
+        System.out.println("\n\n=================================");
         System.out.println("| Bem-vindo ao Capture the Flag! |");
-        System.out.println("=================================");
+        System.out.println("=================================\n");
         boolean running = true;
 
         while (running) {
@@ -50,7 +50,8 @@ public class GameController {
                 System.out.println("1. Gerar novo mapa");
                 System.out.println("2. Importar mapa existente");
                 System.out.println("3. Iniciar jogo");
-                System.out.println("4. Sair");
+                System.out.println("4. Regras");
+                System.out.println("5. Sair");
                 System.out.print("Escolha uma opção: ");
                 int choice = readIntSafely();
 
@@ -70,6 +71,9 @@ public class GameController {
                         }
                         break;
                     case 4:
+                        displayRules();
+                        break;
+                    case 5:
                         running = false;
                         System.out.println("\n[MESSAGEM]: Saindo...\n");
                         break;
@@ -222,7 +226,6 @@ public class GameController {
             double density = scanner.nextDouble();
 
             gameMap = new GameMap(numLocations, isBidirectional, density);
-//            gameMap.printVisualMap();
 
             System.out.println("[MESSAGEM]: O mapa foi criado com sucesso!");
             // Exportação opcional do mapa
@@ -268,6 +271,16 @@ public class GameController {
 
         // Reset do GameMap para garantir que um novo mapa seja gerado ou importado
         gameMap = null;
+    }
+
+    private void displayRules() {
+        System.out.println("\n============================ REGRAS DO JOGO ===========================");
+        System.out.println("| 1. Cada jogador posiciona a sua bandeira num local do mapa.         |");
+        System.out.println("| 2. Cada jogador tem um conjunto de bots ([3] Min & [5] Max).        |");
+        System.out.println("| 3. Existem [3] tipos de BOTs: [ATAQUE] [DEFESA] [SUPORTE].          |");
+        System.out.println("| 4. Cada jogador tem de possuir no minimo um bot de cada tipo.       |");
+        System.out.println("| 5. O jogo termina quando um bot captura a bandeira do adversário.   |");
+        System.out.println("=======================================================================\n");
     }
 }
 
