@@ -6,11 +6,21 @@ public class Bot {
     private Algorithm algorithm;
     private int botNumber;
 
+    private String botIdentifier;
+
     public Bot(Player player, int location, Algorithm algorithm, int botNumber) {
         this.player = player;
         this.location = location;
         this.algorithm = algorithm;
         this.botNumber = botNumber;
+    }
+
+    public Bot(int location, String botIdentifier) {
+        this.location = location;
+        this.botIdentifier = botIdentifier;
+    }
+    public String getBotIdentifier() {
+        return botIdentifier;
     }
 
     public int getBotNumber() {

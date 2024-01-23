@@ -1,5 +1,6 @@
 package tp_ed.capturetheflag.game;
 
+import tp_ed.structures.exceptions.ElementNotFoundException;
 import tp_ed.structures.exceptions.EmptyCollectionException;
 import tp_ed.structures.Network;
 import tp_ed.capturetheflag.utils.JsonUtil;
@@ -99,7 +100,6 @@ public class GameController {
         initializeBots(player1, numberOfBots, player1.getName(), scanner, gameMap);
         initializeBots(player2, numberOfBots, player2.getName(), scanner, gameMap);
 
-        System.out.println("aqui crl");
         player1.printBotsInfo();
         player2.printBotsInfo();
     }
@@ -129,7 +129,7 @@ public class GameController {
                     try {
                         gameEndedPlayer1 = executeBotTurn(firstPlayer, firstPlayer.getBots().get((round[0] - 1) % firstPlayer.getBots().size()),
                                 secondPlayer.getFlag().getLocation(), gameMap, secondPlayer);
-                    } catch (EmptyCollectionException e) {
+                    } catch (EmptyCollectionException | ElementNotFoundException e) {
                         e.printStackTrace();
                     }
 
@@ -139,7 +139,7 @@ public class GameController {
                         try {
                             gameEndedPlayer2 = executeBotTurn(secondPlayer, secondPlayer.getBots().get((round[0] - 1) % secondPlayer.getBots().size()),
                                     firstPlayer.getFlag().getLocation(), gameMap, firstPlayer);
-                        } catch (EmptyCollectionException e) {
+                        } catch (EmptyCollectionException | ElementNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
@@ -147,17 +147,21 @@ public class GameController {
                     // Verificar se o jogo terminou
                     if (gameEndedPlayer1 || gameEndedPlayer2) {
                         String arteAscii =
-                                "       _      _                   \n" +
-                                        "      (_)    | |                  \n" +
-                                        "__   ___  ___| |_ ___  _ __ _   _ \n" +
-                                        "\\ \\ / / |/ __| __/ _ \\| '__| | | |\n" +
-                                        " \\ V /| | (__| || (_) | |  | |_| |\n" +
-                                        "  \\_/ |_|\\___|\\__\\___/|_|   \\__, |\n" +
-                                        "                             __/ |\n" +
-                                        "                            |___/ \n";
+                                "__/\\\\\\________/\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_______/\\\\\\\\\\_________/\\\\\\\\\\\\\\\\\\______/\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\\\\\\\\\\\\\____        \n" +
+                                        " _\\/\\\\\\_______\\/\\\\\\_\\/////\\\\\\///__\\///////\\\\\\/////______/\\\\\\///\\\\\\_____/\\\\\\///////\\\\\\___\\/////\\\\\\///____/\\\\\\\\\\\\\\\\\\\\\\\\\\__       \n" +
+                                        "  _\\//\\\\\\______/\\\\\\______\\/\\\\\\___________\\/\\\\\\_________/\\\\\\/__\\///\\\\\\__\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\______/\\\\\\/////////\\\\\\_      \n" +
+                                        "   __\\//\\\\\\____/\\\\\\_______\\/\\\\\\___________\\/\\\\\\________/\\\\\\______\\//\\\\\\_\\/\\\\\\\\\\\\\\\\\\\\\\/________\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_     \n" +
+                                        "    ___\\//\\\\\\__/\\\\\\________\\/\\\\\\___________\\/\\\\\\_______\\/\\\\\\_______\\/\\\\\\_\\/\\\\\\//////\\\\\\________\\/\\\\\\_____\\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_    \n" +
+                                        "     ____\\//\\\\\\/\\\\\\_________\\/\\\\\\___________\\/\\\\\\_______\\//\\\\\\______/\\\\\\__\\/\\\\\\____\\//\\\\\\_______\\/\\\\\\_____\\/\\\\\\/////////\\\\\\_   \n" +
+                                        "      _____\\//\\\\\\\\\\__________\\/\\\\\\___________\\/\\\\\\________\\///\\\\\\__/\\\\\\____\\/\\\\\\_____\\//\\\\\\______\\/\\\\\\_____\\/\\\\\\_______\\/\\\\\\_  \n" +
+                                        "       ______\\//\\\\\\________/\\\\\\\\\\\\\\\\\\\\\\_______\\/\\\\\\__________\\///\\\\\\\\\\/_____\\/\\\\\\______\\//\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\_______\\/\\\\\\_ \n" +
+                                        "        _______\\///________\\///////////________\\///_____________\\/////_______\\///________\\///__\\///////////__\\///________\\///__";
 
                         System.out.println("\n" + arteAscii);
-                        System.out.println("\n"+(gameEndedPlayer1 ? firstPlayer.getName() : secondPlayer.getName()) + " venceu o jogo!\n");
+                        System.out.println("\n["+(gameEndedPlayer1 ? firstPlayer.getName() : secondPlayer.getName())+"]" + " VENCEU O JOGO!!!\n");
+                        Player winningPlayer = gameEndedPlayer1 ? firstPlayer : secondPlayer;
+                        Bot winningBot = winningPlayer.getBots().get((round[0] - 1) % winningPlayer.getBots().size());
+                        gameMap.highlightWinningBot(winningPlayer.getName(), winningBot.getBotNumber());
                         timer.cancel(); // Cancelar o temporizador
                         resetGameState(); // Resetar o estado do jogo
                         isGameRunning = false; // O jogo terminou

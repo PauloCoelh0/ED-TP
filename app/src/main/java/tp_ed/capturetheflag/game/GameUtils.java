@@ -1,5 +1,6 @@
 package tp_ed.capturetheflag.game;
 
+import tp_ed.structures.exceptions.ElementNotFoundException;
 import tp_ed.structures.exceptions.EmptyCollectionException;
 import tp_ed.structures.ArrayUnorderedList;
 
@@ -9,7 +10,7 @@ import java.util.Scanner;
 import static tp_ed.capturetheflag.game.GameRules.isLocationOccupied;
 
 public class GameUtils {
-    public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException {
+    public static boolean executeBotTurn(Player player, Bot bot, int flagLocation, GameMap gameMap, Player enemy) throws EmptyCollectionException, ElementNotFoundException {
         int oldLocation = bot.getLocation(); // Localização anterior para registro
         int teamFlagLocation = player.getFlag().getLocation();
         Iterator<Integer> pathIterator = bot.getAlgorithm().execute(bot.getLocation(), flagLocation, teamFlagLocation,null);

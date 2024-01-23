@@ -1,14 +1,12 @@
 package tp_ed.capturetheflag.game;
 
+import tp_ed.structures.ArrayUnorderedList;
+import tp_ed.structures.exceptions.ElementNotFoundException;
 import tp_ed.structures.exceptions.EmptyCollectionException;
 import tp_ed.structures.Network;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class GameMap {
     private final Network<Integer> network;
@@ -16,13 +14,13 @@ public class GameMap {
     private double density;
     private Integer flagLocationPlayer1;
     private Integer flagLocationPlayer2;
-    private Map<Integer, String> botLocations;
+    private ArrayUnorderedList<Bot> botLocations;
     private Graph graph;
     public GameMap(int numLocations, boolean isBidirectional, double density) throws EmptyCollectionException {
         this.numLocations = numLocations;
         this.density = density;
         this.network = new Network<>(isBidirectional);
-        this.botLocations = new HashMap<>();
+        botLocations = new ArrayUnorderedList<>();
         generateMap();
         printVisualMap();
     }
@@ -109,20 +107,20 @@ public class GameMap {
     public void setFlagLocationPlayer2(Integer location) {
         this.flagLocationPlayer2 = location;
     }
-    public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) {
-        // Identificar o bot
-        String botLabel;
-        if(Objects.equals(playerIdentifier, "Player 1")){
-            botLabel = "P1 B" + botNumber;
-        } else {
-            botLabel = "P2 B" + botNumber;
+    public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) throws ElementNotFoundException {
+        String botLabel = playerIdentifier.equals("Player 1") ? "P1 B" + botNumber : "P2 B" + botNumber;
+
+        // Primeiro, remova a localização anterior do bot, se houver
+        for (int i = 0; i < botLocations.size(); i++) {
+            Bot botLoc = botLocations.getIndex(i);
+            if (botLoc.getBotIdentifier().equals(botLabel)) {
+                botLocations.remove(botLoc);
+                break;
+            }
         }
 
-        // Remover localização anterior do bot
-        botLocations.values().remove(botLabel);
-
-        // Atualizar com a nova localização
-        botLocations.put(newLocation, botLabel);
+        // Adicione a nova localização do bot
+        botLocations.addToRear(new Bot(newLocation, botLabel));
     }
 
 
@@ -177,14 +175,13 @@ public class GameMap {
             }
         }
 
-        for (Map.Entry<Integer, String> botLocationEntry : botLocations.entrySet()) {
-            Node node = graph.getNode(Integer.toString(botLocationEntry.getKey()));
+        // Atualizar locais dos bots
+        for (int i = 0; i < botLocations.size(); i++) {
+            Bot botLocation = botLocations.getIndex(i);
+            Node node = graph.getNode(Integer.toString(botLocation.getLocation()));
             if (node != null) {
-                String botLabel = botLocationEntry.getValue();
-                // Incluir o número do vértice no rótulo
+                String botLabel = botLocation.getBotIdentifier();
                 String label = node.getId() + " " + botLabel;
-
-                // Definir a cor baseada no jogador
                 String color = botLabel.startsWith("P1") ? "blue" : "rgb(30, 140, 0)";
                 node.addAttribute("ui.style", "fill-color: " + color + ";");
                 node.addAttribute("ui.style", "text-color: " + color + ";");
@@ -194,13 +191,37 @@ public class GameMap {
 
         // Remover rótulos de bots de nós que não têm mais bots
         for (Node node : graph) {
-            if (!botLocations.containsKey(Integer.parseInt(node.getId()))) {
+            boolean botExists = false;
+            for (int i = 0; i < botLocations.size(); i++) {
+                Bot botLocation = botLocations.getIndex(i);
+                if (Integer.parseInt(node.getId()) == botLocation.getLocation()) {
+                    botExists = true;
+                    break;
+                }
+            }
+            if (!botExists) {
                 node.addAttribute("ui.label", node.getId());
                 node.addAttribute("ui.style", "text-color: black;");
             }
         }
+
     }
 
+    public void highlightWinningBot(String playerIdentifier, int botNumber) {
+        String botLabel = playerIdentifier.equals("Player 1") ? "P1 B" + botNumber : "P2 B" + botNumber;
+
+        for (int i = 0; i < botLocations.size(); i++) {
+            Bot botLocation = botLocations.getIndex(i);
+            if (botLocation.getBotIdentifier().equals(botLabel)) {
+                Node winningNode = graph.getNode(Integer.toString(botLocation.getLocation()));
+                if (winningNode != null) {
+                    winningNode.addAttribute("ui.style", "fill-color: rgb(246, 207, 102);");
+                    winningNode.addAttribute("ui.label", botLocation.getBotIdentifier() + " (Vencedor)");
+                    break;
+                }
+            }
+        }
+    }
     public Network<Integer> getNetwork() {
         return network;
     }
