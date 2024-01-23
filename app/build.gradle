@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'tp_ed'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Dependências do projeto
+    implementation 'org.json:json:20231013'
+    implementation 'org.graphstream:gs-core:1.3'
+    implementation 'org.graphstream:gs-ui:1.3'
+    // Test dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Configuração do plugin 'application'.
+application {
+    // Defina aqui a classe principal do seu aplicativo.
+    mainClassName = 'tp_ed.client.DemoCaptureTheFlag'
+}
+
+// Tarefa para criar o JAR de 'structures'.
+task structuresJar(type: Jar) {
+    archiveBaseName.set('structures')
+    archiveVersion.set('1.0')
+    from sourceSets.main.output
+    include 'tp_ed/structures/**'
+}
+
+// Tarefa para criar o JAR de 'capturetheflag'.
+task captureTheFlagJar(type: Jar) {
+    archiveBaseName.set('capturetheflag')
+    archiveVersion.set('1.0')
+    from sourceSets.main.output
+    include 'tp_ed/capturetheflag/**'
+}
+
+// Tarefa para criar um "fat JAR" para o cliente 'DemoCaptureTheFlag'.
+task demoJar(type: Jar) {
+    manifest {
+        attributes(
+                'Main-Class': 'tp_ed.client.DemoCaptureTheFlag'
+        )
+    }
+    from sourceSets.main.allSource
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+    archiveBaseName.set('DemoCaptureTheFlag')
+    archiveVersion.set('1.0')
+
+    // Configurar a estratégia de tratamento de duplicatas
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Tarefa para executar o aplicativo
+run {
+    dependsOn 'demoJar'
+    standardInput = System.in
+}
