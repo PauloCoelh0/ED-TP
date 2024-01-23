@@ -8,9 +8,9 @@ import tp_ed.structures.CircularArrayQueue;
  * It stores information about the player's name, the associated flag, and a circular array queue of bots.
  */
 public class Player {
-    private String name;
-    private Flag flag;
-    private CircularArrayQueue<Bot> bots;
+    private String name; // The name of the player
+    private Flag flag; // The flag associated with the player
+    private CircularArrayQueue<Bot> bots; // The player's circular queue of bots
 
     /**
      * Constructs a new player with the specified name.

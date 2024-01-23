@@ -5,7 +5,7 @@ package tp_ed.capturetheflag.game;
  * It stores information the flag's location in the game map.
  */
 public class Flag {
-    private int location;
+    private int location; // The location of the flag in the game
 
     /**
      * Constructs a new flag with the specified location.

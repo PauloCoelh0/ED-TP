@@ -6,12 +6,11 @@ package tp_ed.capturetheflag.game;
  * the movement algorithm it uses, the bot number and a unique identifier.
  */
 public class Bot {
-    private int location;
-    private Player player;
-    private Algorithm algorithm;
-    private int botNumber;
-
-    private String botIdentifier;
+    private int location; // The current location of the bot in the game map
+    private Player player; // The player the bot is associated with
+    private Algorithm algorithm; // The movement algorithm the bot follows
+    private int botNumber; // The number of the bot
+    private String botIdentifier; // The unique identifier of the bot
 
     /**
      * Constructs a new bot associated with a player, specified location, algorithm, and bot number.
