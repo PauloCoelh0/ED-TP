@@ -16,6 +16,10 @@ import static tp_ed.capturetheflag.game.GameUtils.initializeBots;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * The GameController class is responsible for managing the game's overall flow in Capture the Flag.
+ * It handles the initialization of the game, player setup, game start, and manages the game loop.
+ */
 public class GameController {
     private static GameMap gameMap;
     private Player player1;
@@ -23,12 +27,21 @@ public class GameController {
     public static Scanner scanner;
     private static boolean isGameRunning = false;
 
+    /**
+     * Constructs a new GameController.
+     * Initializes the scanner and sets up two players for the game.
+     */
     public GameController() {
         scanner = new Scanner(System.in);
         this.player1 = new Player("Player 1");
         this.player2 = new Player("Player 2");
     }
 
+    /**
+     * Starts the game loop.
+     * Presents the user with game options such as generating a new map, importing a map,
+     * starting the game, displaying rules, and exiting.
+     */
     public void start() {
         System.out.println("\n\n=================================");
         System.out.println("| Bem-vindo ao Capture the Flag! |");
@@ -80,6 +93,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Sets up the game by allowing players to place their flags and initialize their bots.
+     * Ensures that each player has the correct number of bots and that the flags are placed validly.
+     */
     private void setupGame() {
         int numberOfBots;
 
@@ -101,6 +118,10 @@ public class GameController {
         player2.printBotsInfo();
     }
 
+    /**
+     * Initiates and manages the turn-based game.
+     * Handles each player's turns, checks for game-winning conditions, and manages the game rounds.
+     */
     private void startGame() {
         System.out.println("\n[MENSAGEM]: O jogo começou!\n");
         isGameRunning = true;
@@ -179,6 +200,12 @@ public class GameController {
         timer.scheduleAtFixedRate(task, 0, delay * 2); // Agendar a tarefa para executar a cada 2 segundos
     }
 
+    /**
+     * Presents a menu to the player for setting the location of their flag.
+     * Validates the selected location based on game rules and updates the game map accordingly.
+     *
+     * @param player The player for whom the flag location is being set.
+     */
     public void setFlagsMenu(Player player) {
         int flagLocation;
 
@@ -207,6 +234,10 @@ public class GameController {
         gameMap.updateVisualMap();
     }
 
+    /**
+     * Handles the generation of a new game map.
+     * Allows the user to specify map parameters and optionally export the map to a file.
+     */
     private static void generateMapMenu() {
         int numLocations;
         boolean isBidirectional;
@@ -250,6 +281,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles importing a game map from a file.
+     * Allows the user to specify the filename of a previously saved map to load.
+     */
     private static void importMapMenu() {
         String filename;
 
@@ -271,6 +306,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Resets the game state to its initial condition.
+     * Clears the players' flags and bots and resets the game map.
+     */
     private void resetGameState() {
         // Limpar as bandeiras dos jogadores
         player1.setFlag(null);
@@ -288,6 +327,9 @@ public class GameController {
         gameMap = null;
     }
 
+    /**
+     * Displays the game rules to the user.
+     */
     private void displayRules() {
         System.out.println("\n============================ REGRAS DO JOGO ===========================");
         System.out.println("| 1. Cada jogador posiciona a sua bandeira num local do mapa.         |");
