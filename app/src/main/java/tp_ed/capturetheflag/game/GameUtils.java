@@ -62,7 +62,7 @@ public class GameUtils {
         return reachedFlag;
     }
 
-    public static void initializeBots(Player player, int numberOfBots, String playerName, Scanner scanner, GameMap gameMap) {
+    public static void initializeBots(Player player, int numberOfBots, String playerName, GameMap gameMap) {
         ArrayUnorderedList<AlgorithmType> chosenAlgorithms = new ArrayUnorderedList<>();
 
         for (int i = 0; i < numberOfBots; i++) {
@@ -108,7 +108,6 @@ public class GameUtils {
                     break;
                 default:
                     System.out.println("\n[ERRO]: Opção inválida.");
-                    chosenType = null;
             }
         } while (chosenType == null);
 
