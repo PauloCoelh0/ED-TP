@@ -1,4 +1,4 @@
-# Practical Work for Data Structure
+# Practical Work for Data Structures
 
 ### Runner Idications
 
@@ -32,9 +32,12 @@ _**Methods that you can use to run the game:**_
 
 ### Work Statement (in portuguese)
 
-![image](https://github.com/PauloCoelh0/ED-TP/assets/105610546/41087f2b-2e6a-4495-9d3d-9c81574641c3)
-![image](https://github.com/PauloCoelh0/ED-TP/assets/105610546/efc3bda1-eeee-41be-8d85-ba7417404c4e)
-![image](https://github.com/PauloCoelh0/ED-TP/assets/105610546/aa5869e3-a324-4233-996e-656950e634c9)
+![tp_ed_Página_1](https://github.com/PauloCoelh0/ED-TP/assets/100838378/c6d4897f-82a0-483e-bb01-b2f7cb4e613d)
+![tp_ed_Página_2](https://github.com/PauloCoelh0/ED-TP/assets/100838378/f5557775-8e13-45fd-a6fe-fe0f86ac16d9)
+![tp_ed_Página_3](https://github.com/PauloCoelh0/ED-TP/assets/100838378/33eb27a4-9c83-4fcd-bdd9-42a0072b812d)
+
+
+
 
 
 
