@@ -1,8 +1,9 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
-group 'tp_ed' // Substitua com o seu pacote base
+group 'tp_ed'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = '17'
@@ -25,21 +26,49 @@ test {
     useJUnitPlatform()
 }
 
-// Tarefa para criar um JAR 'fat' que inclui todas as dependências
-task fatJar(type: Jar) {
-    archiveClassifier.set('all')
+// Configuração do plugin 'application'.
+application {
+    // Defina aqui a classe principal do seu aplicativo.
+    mainClassName = 'tp_ed.client.DemoCaptureTheFlag'
+}
+
+// Tarefa para criar o JAR de 'structures'.
+task structuresJar(type: Jar) {
+    archiveBaseName.set('structures')
+    archiveVersion.set('1.0')
+    from sourceSets.main.output
+    include 'tp_ed/structures/**'
+}
+
+// Tarefa para criar o JAR de 'capturetheflag'.
+task captureTheFlagJar(type: Jar) {
+    archiveBaseName.set('capturetheflag')
+    archiveVersion.set('1.0')
+    from sourceSets.main.output
+    include 'tp_ed/capturetheflag/**'
+}
+
+// Tarefa para criar um "fat JAR" para o cliente 'DemoCaptureTheFlag'.
+task demoJar(type: Jar) {
     manifest {
         attributes(
-                'Main-Class': 'tp_ed.cliente.DemoCaptureTheFlag'
+                'Main-Class': 'tp_ed.client.DemoCaptureTheFlag'
         )
     }
+    from sourceSets.main.allSource
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-        sourceSets.main.output
     }
     with jar
+    archiveBaseName.set('DemoCaptureTheFlag')
+    archiveVersion.set('1.0')
+
+    // Configurar a estratégia de tratamento de duplicatas
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-// Certifique-se de que a tarefa fatJar seja executada quando você construir o projeto
-assemble.dependsOn(fatJar)
+// Tarefa para executar o aplicativo
+run {
+    dependsOn 'demoJar'
+    standardInput = System.in
+}
