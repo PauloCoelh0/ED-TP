@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
+import static tp_ed.capturetheflag.game.GameRules.*;
 import static tp_ed.capturetheflag.game.GameUtils.executeBotTurn;
 import static tp_ed.capturetheflag.game.GameUtils.initializeBots;
 
@@ -19,7 +20,7 @@ public class GameController {
     private static GameMap gameMap;
     private Player player1;
     private Player player2;
-    private static Scanner scanner;
+    public static Scanner scanner;
     private static boolean isGameRunning = false;
 
     public GameController() {
@@ -27,37 +28,6 @@ public class GameController {
         this.player1 = new Player("Player 1");
         this.player2 = new Player("Player 2");
     }
-
-    private static int readIntSafely() {
-        while (true) {
-            if (scanner.hasNextInt()) {
-                return scanner.nextInt();
-            } else {
-                System.out.println("\n[ERRO]: Insira um número inteiro: ");
-                scanner.next();
-            }
-        }
-    }
-
-    private static boolean readBooleanSafely() {
-        while (true) {
-            String input = scanner.next();
-            if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                return Boolean.parseBoolean(input);
-            } else {
-                System.out.println("\n[ERRO]: Insira 'true' ou 'false': ");
-            }
-        }
-    }
-
-    private static double readDoubleSafely() {
-        while (!scanner.hasNextDouble()) {
-            System.out.println("\n[ERRO]: Insira um número válido: ");
-            scanner.next();
-        }
-        return scanner.nextDouble();
-    }
-
 
     public void start() throws EmptyCollectionException {
         System.out.println("\n\n=================================");

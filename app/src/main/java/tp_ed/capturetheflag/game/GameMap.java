@@ -107,6 +107,7 @@ public class GameMap {
     public void setFlagLocationPlayer2(Integer location) {
         this.flagLocationPlayer2 = location;
     }
+
     public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) throws ElementNotFoundException {
         String botLabel = playerIdentifier.equals("Player 1") ? "P1 B" + botNumber : "P2 B" + botNumber;
 
@@ -122,7 +123,6 @@ public class GameMap {
         // Adicione a nova localização do bot
         botLocations.addToRear(new Bot(newLocation, botLabel));
     }
-
 
     public void printVisualMap() {
         if (graph == null) {
@@ -151,8 +151,8 @@ public class GameMap {
         }
 
         graph.display();
-
     }
+
     public void updateVisualMap() {
         // Resetar a cor de todos os nós para o padrão
         for (Node node : graph) {
@@ -222,6 +222,7 @@ public class GameMap {
             }
         }
     }
+
     public Network<Integer> getNetwork() {
         return network;
     }
