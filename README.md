@@ -27,6 +27,9 @@ _**Methods that you can use to run the game:**_
 **GraphStream: `1.3`**
 
 ### JavaDoc
+
+**On: `ED-TP\\app\\javadoc`**
+
 ### Work Statement (in portuguese)
 
 ![image](https://github.com/PauloCoelh0/ED-TP/assets/105610546/41087f2b-2e6a-4495-9d3d-9c81574641c3)
