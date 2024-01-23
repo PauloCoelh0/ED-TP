@@ -8,14 +8,27 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
+/**
+ * The GameMap class represents the game map for the game.
+ * It handles the map's structure, including vertices and edges, and the visualization of the game state.
+ */
 public class GameMap {
-    private final Network<Integer> network;
-    private final int numLocations;
-    private double density;
-    private Integer flagLocationPlayer1;
-    private Integer flagLocationPlayer2;
-    private ArrayUnorderedList<Bot> botLocations;
-    private Graph graph;
+    private final Network<Integer> network; // Represents the map's network structure
+    private final int numLocations; // Number of locations on the map
+    private double density; // Density of the connections in the map
+    private Integer flagLocationPlayer1; // Flag location for player 1
+    private Integer flagLocationPlayer2; // Flag location for player 2
+    private ArrayUnorderedList<Bot> botLocations; // List of bot locations
+    private Graph graph; // Graph for visual representation of the map
+
+    /**
+     * Constructs a new GameMap with specified parameters.
+     *
+     * @param numLocations Number of locations in the map.
+     * @param isBidirectional Whether the map's paths are bidirectional.
+     * @param density Density of the paths in the map.
+     * @throws EmptyCollectionException If the network cannot be created.
+     */
     public GameMap(int numLocations, boolean isBidirectional, double density) throws EmptyCollectionException {
         this.numLocations = numLocations;
         this.density = density;
@@ -25,6 +38,11 @@ public class GameMap {
         printVisualMap();
     }
 
+    /**
+     * Constructs a GameMap based on an imported network.
+     *
+     * @param importedNetwork The network structure imported for the map.
+     */
     public GameMap(Network<Integer> importedNetwork) {
         this.network = importedNetwork;
         this.numLocations = importedNetwork.size();
@@ -32,6 +50,12 @@ public class GameMap {
         printVisualMap();
     }
 
+    /**
+     * Generates the map by adding vertices and edges based on the specified parameters.
+     * Ensures the connectivity of the map and regenerates if necessary.
+     *
+     * @throws EmptyCollectionException If the map generation encounters an issue.
+     */
     private void generateMap() throws EmptyCollectionException {
         // Adicionar vértices
         for (int i = 0; i < numLocations; i++) {
@@ -53,10 +77,21 @@ public class GameMap {
         }
     }
 
+    /**
+     * Calculates the number of edges to be added to the map based on the density and number of locations.
+     *
+     * @return The calculated number of edges.
+     */
     private int calculateNumberOfEdges() {
         return (int) (density * numLocations * (numLocations - 1) / 2);
     }
 
+    /**
+     * Adds a random edge to the map.
+     *
+     * @param edgesToAdd Number of edges left to add.
+     * @return Updated number of edges left to add.
+     */
     private int addRandomEdge(int edgesToAdd) {
         int location1 = (int) (Math.random() * numLocations);
         int location2 = (int) (Math.random() * numLocations);
@@ -69,6 +104,11 @@ public class GameMap {
         return edgesToAdd;
     }
 
+    /**
+     * Regenerates the map to ensure connectivity if the initial generation results in a disconnected map.
+     *
+     * @throws EmptyCollectionException If the regeneration encounters an issue.
+     */
     private void regenerateMap() throws EmptyCollectionException {
         int edgesToAdd = calculateNumberOfEdges();
         while (!network.isConnected()) {
@@ -77,6 +117,9 @@ public class GameMap {
         System.out.println("[MENSAGEM]: Mapa foi reconectado com sucesso!");
     }
 
+    /**
+     * Prints the current map configuration to the console.
+     */
     public void printMap() {
         System.out.println("Mapa:");
         for (int i = 0; i < numLocations; i++) {
@@ -89,6 +132,11 @@ public class GameMap {
         }
     }
 
+    /**
+     * Prints the network configuration for an imported network.
+     *
+     * @param network The network structure to be printed.
+     */
     public void printNetwork(Network<Integer> network) {
         System.out.println("[MENSAGEM]: Mapa Importado:");
         for (int i = 0; i < numLocations; i++) {
@@ -101,14 +149,32 @@ public class GameMap {
         }
     }
 
+    /**
+     * Sets the flag location for player 1.
+     *
+     * @param location The location to set the flag for player 1.
+     */
     public void setFlagLocationPlayer1(Integer location) {
         this.flagLocationPlayer1 = location;
     }
 
+    /**
+     * Sets the flag location for player 2.
+     *
+     * @param location The location to set the flag for player 2.
+     */
     public void setFlagLocationPlayer2(Integer location) {
         this.flagLocationPlayer2 = location;
     }
 
+    /**
+     * Updates the location of a bot on the map.
+     *
+     * @param playerIdentifier Identifier of the player owning the bot.
+     * @param botNumber The number of the bot.
+     * @param newLocation The new location of the bot.
+     * @throws ElementNotFoundException If the bot is not found.
+     */
     public void updateBotLocation(String playerIdentifier, int botNumber, int newLocation) throws ElementNotFoundException {
         String botLabel = playerIdentifier.equals("Player 1") ? "P1 B" + botNumber : "P2 B" + botNumber;
 
@@ -125,6 +191,9 @@ public class GameMap {
         botLocations.addToRear(new Bot(newLocation, botLabel));
     }
 
+    /**
+     * Prints a visual representation of the map using a graphical interface.
+     */
     public void printVisualMap() {
         if (graph == null) {
             graph = new SingleGraph("Game Map Visualization");
@@ -154,6 +223,9 @@ public class GameMap {
         graph.display();
     }
 
+    /**
+     * Updates the visual representation of the map to reflect the current game state.
+     */
     public void updateVisualMap() {
         // Resetar a cor de todos os nós para o padrão
         for (Node node : graph) {
@@ -208,6 +280,12 @@ public class GameMap {
 
     }
 
+    /**
+     * Highlights the winning bot on the map.
+     *
+     * @param playerIdentifier Identifier of the player owning the winning bot.
+     * @param botNumber The number of the winning bot.
+     */
     public void highlightWinningBot(String playerIdentifier, int botNumber) {
         String botLabel = playerIdentifier.equals("Player 1") ? "P1 B" + botNumber : "P2 B" + botNumber;
 
@@ -224,6 +302,11 @@ public class GameMap {
         }
     }
 
+    /**
+     * Gets the network structure of the map.
+     *
+     * @return The network structure.
+     */
     public Network<Integer> getNetwork() {
         return network;
     }
